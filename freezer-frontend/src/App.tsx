@@ -383,11 +383,7 @@ function App() {
           )}
         </div>
 
-        <Modal
-          open={isModalOpen}
-          onClose={handleModalClose}
-          title={editingItem ? "Edit Item" : "Add Item"}
-        >
+        <Modal open={isModalOpen} onClose={handleModalClose}>
           <ItemForm
             initial={editingItem ?? {}}
             onSave={handleSave}

@@ -69,7 +69,6 @@ export function Modal({
       className="fixed inset-0 z-50 flex items-center justify-center"
       aria-modal="true"
       role="dialog"
-      aria-labelledby={title ? "modal-title" : undefined}
       aria-describedby="modal-content"
     >
       <div
@@ -79,25 +78,10 @@ export function Modal({
       />
       <div
         ref={dialogRef}
-        className="relative bg-white rounded shadow-xl w-full max-w-lg mx-4 p-3 border border-[#00522C]/20"
+        className="relative bg-white rounded-xl shadow-xl w-full max-w-lg mx-4 p-6 border border-[#00522C]/20"
         role="document"
         id="modal-content"
       >
-        <div className="flex items-center justify-between mb-2">
-          {title && (
-            <h3 id="modal-title" className="text-lg font-medium text-[#00522C]">
-              {title}
-            </h3>
-          )}
-          <button
-            onClick={onClose}
-            aria-label="Close modal"
-            ref={firstFocusableRef}
-            className="px-3 py-1 text-[#00522C] hover:bg-[#00522C]/5 rounded focus:outline-none focus:ring-2 focus:ring-[#00522C] focus:ring-offset-2"
-          >
-            Close
-          </button>
-        </div>
         {children}
         <button
           className="sr-only"
