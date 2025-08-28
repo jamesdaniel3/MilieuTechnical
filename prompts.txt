@@ -1,0 +1,27 @@
+Setup Prompt:
+
+I am building a web app to keep information on food stored in a freezer and want you to build out some of the basic structure. 
+The app will use React, TypeScript, Vite, Tailwind, and idb-keyval with IndexedDB. We will test with Vitest and React Testing Library. 
+
+Freezer items will have the following fields: id, name, quantity, location (one of Top Drawer, Bottom Drawer, or Door defined with an Enum), addedAt, expiresOn, and notes. 
+
+I want you to create a set of tests that verify the ability to create, edit, and delete items. 
+I also want tests that verify that items can be retreived by location. 
+
+Once the tests are written, put IndexDB operations in a small repository module which is exposed through a custom hook. 
+Ensure an in-memory cache is maintained to avoid extra reads. Run your code against the tests until tests pass.
+
+Agent Response: 
+
+generated a large part of the codebase
+
+Next Prompt:
+I want the logic for adding items to be handled through a modal. 
+Can you break out the item form into it's own component? 
+Additionally, I want to add items to the displayed items performantly.
+I'm not sure if we should just add a dependency to the useEffect that get's items so that when an item is submitted the useEffects runs again or if we can just add the item to the current state when that happens. 
+I think I would prefer to just update the state because I don't want the whole page to need to load when 1 item is added
+
+Agent response:
+
+created modal 
