@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Location } from "../types";
-import { isDevelopment } from "../config";
 
 export type SectionMap = Record<Location, boolean>;
 

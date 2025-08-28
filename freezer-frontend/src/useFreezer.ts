@@ -57,7 +57,6 @@ export function useFreezer() {
     async (item: FreezerItem) => {
       // Store the current state for potential rollback
       const previousItems = items;
-      const previousItem = items.find((i) => i.id === item.id);
 
       // Optimistically update local state
       setItems((prev) => prev.map((it) => (it.id === item.id ? item : it)));
@@ -86,7 +85,6 @@ export function useFreezer() {
     async (id: string) => {
       // Store the current state for potential rollback
       const previousItems = items;
-      const deletedItem = items.find((i) => i.id === id);
 
       // Optimistically update local state
       setItems((prev) => prev.filter((it) => it.id !== id));
