@@ -69,11 +69,14 @@ function App() {
       .filter(([, selected]) => selected)
       .map(([freshness]) => freshness as FreshnessFilter);
 
-    if (selectedFreshness.length > 0) {
-      pool = pool.filter((i) =>
-        selectedFreshness.includes(getItemFreshness(i.expiresOn))
-      );
+    // If no freshness levels are selected, show no items
+    if (selectedFreshness.length === 0) {
+      return [];
     }
+
+    pool = pool.filter((i) =>
+      selectedFreshness.includes(getItemFreshness(i.expiresOn))
+    );
 
     // Apply next 7 days filter
     if (showNext7Days) {

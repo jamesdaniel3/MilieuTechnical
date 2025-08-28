@@ -24,7 +24,9 @@ export function ItemForm({
   onCancel?: () => void;
 }) {
   const [name, setName] = useState(initial?.name ?? "");
-  const [quantity, setQuantity] = useState<number>(initial?.quantity ?? 1);
+  const [quantity, setQuantity] = useState<string>(
+    initial?.quantity?.toString() ?? "1"
+  );
   const [units, setUnits] = useState(initial?.units ?? "");
   const [location, setLocation] = useState<Location>(
     initial?.location ?? Location.TopDrawer
@@ -45,7 +47,8 @@ export function ItemForm({
       newErrors.name = "Name is required";
     }
 
-    if (!quantity || quantity <= 0) {
+    const quantityNum = parseFloat(quantity);
+    if (isNaN(quantityNum) || quantityNum <= 0) {
       newErrors.quantity = "Quantity must be greater than 0";
     }
 
@@ -82,7 +85,7 @@ export function ItemForm({
     const item: FreezerItem = {
       id: initial?.id ?? uid(),
       name: name.trim(),
-      quantity: Number.isFinite(quantity) ? quantity : 1,
+      quantity: parseFloat(quantity),
       units: units.trim(),
       location,
       addedAt: initial?.addedAt ?? nowIso,
@@ -145,26 +148,31 @@ export function ItemForm({
           <span className="text-sm font-medium text-[#00522C]">Quantity</span>
           <input
             type="number"
+            step="0.01"
+            min="0.01"
             value={quantity}
-            min={1}
-            onChange={(e) => setQuantity(Number(e.target.value) || 1)}
+            onChange={(e) => setQuantity(e.target.value)}
             className={`px-3 py-2 border border-[#00522C]/20 rounded focus:outline-none focus:border-[#00522C] focus:ring-1 focus:ring-[#00522C] ${
               errors.quantity ? "border-red-500" : ""
             }`}
             aria-label="Item quantity"
-            aria-describedby={errors.quantity ? "quantity-error" : undefined}
+            aria-describedby={
+              errors.quantity ? "quantity-error" : "quantity-help"
+            }
             aria-invalid={!!errors.quantity}
             required
           />
-          {errors.quantity && (
-            <span
-              id="quantity-error"
-              className="text-xs text-red-500"
-              role="alert"
-            >
-              {errors.quantity}
-            </span>
-          )}
+          <div className="flex justify-between items-center">
+            {errors.quantity && (
+              <span
+                id="quantity-error"
+                className="text-xs text-red-500"
+                role="alert"
+              >
+                {errors.quantity}
+              </span>
+            )}
+          </div>
         </label>
 
         <label className="flex flex-col gap-1">

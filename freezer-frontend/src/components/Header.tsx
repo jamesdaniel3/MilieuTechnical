@@ -127,6 +127,22 @@ export function Header({
     });
   };
 
+  // Handle sections dropdown toggle - close freshness if open
+  const handleSectionsToggle = () => {
+    if (freshnessOpen) {
+      setFreshnessOpen(false);
+    }
+    setOpen((v) => !v);
+  };
+
+  // Handle freshness dropdown toggle - close sections if open
+  const handleFreshnessToggle = () => {
+    if (open) {
+      setOpen(false);
+    }
+    setFreshnessOpen((v) => !v);
+  };
+
   return (
     <div className="sticky top-0 z-40 bg-[#fbfcee]/90 backdrop-blur border-b border-[#00522C]/20">
       <div className="w-[95vw] mx-auto p-3 flex items-center gap-3">
@@ -154,7 +170,7 @@ export function Header({
         <div className="relative" ref={containerRef}>
           <button
             ref={sectionsButtonRef}
-            onClick={() => setOpen((v) => !v)}
+            onClick={handleSectionsToggle}
             aria-expanded={open}
             aria-haspopup="true"
             aria-label={`Sections filter. ${open ? "Expanded" : "Collapsed"}. ${
@@ -234,7 +250,7 @@ export function Header({
         <div className="relative" ref={freshnessContainerRef}>
           <button
             ref={freshnessButtonRef}
-            onClick={() => setFreshnessOpen((v) => !v)}
+            onClick={handleFreshnessToggle}
             aria-expanded={freshnessOpen}
             aria-haspopup="true"
             aria-label={`Freshness filter. ${
