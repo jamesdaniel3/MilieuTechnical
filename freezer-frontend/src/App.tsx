@@ -138,21 +138,23 @@ function App() {
   };
 
   const handleSave = async (item: import("./types").FreezerItem) => {
+    // Close modal immediately to show optimistic update
+    handleModalClose();
+
     try {
       if (editingItem) {
         await updateItem(item);
       } else {
         await createItem(item);
       }
-      handleModalClose();
     } catch (error) {
-      // Error is already handled by the optimistic update rollback
       console.error("Failed to save item:", error);
-      toast.error("Failed to save item. Please try again.");
-      // Don't close the modal on error so user can retry
+
+      // Dismiss success toast and show error
+      toast.dismiss();
+      toast.error("Failed to save item. Changes have been rolled back.");
     }
   };
-
   return (
     <div className="h-screen bg-[#fbfcee] overflow-hidden">
       <Header
@@ -168,13 +170,10 @@ function App() {
       />
 
       <div className="w-[90vw] mx-auto p-4 h-[calc(100vh-80px)]">
-        {/* Main content area with responsive layout */}
         <div className="flex gap-6 h-full">
-          {/* Left side: Drawers Container */}
           {hasDrawers && (
             <div className={isDoorVisible ? "w-[70%]" : "w-full"}>
               <div className="flex flex-col gap-6 h-full overflow-hidden">
-                {/* Top Drawer Section */}
                 {isTopDrawerVisible && (
                   <section
                     className={`bg-white rounded-lg shadow-sm border border-[#00522C]/20 ${
@@ -206,7 +205,6 @@ function App() {
                                   toast.error(
                                     "Failed to delete item. Please try again."
                                   );
-                                  // Error is already handled by optimistic update rollback
                                 }
                               }}
                             />
@@ -223,7 +221,6 @@ function App() {
                   </section>
                 )}
 
-                {/* Bottom Drawer Section */}
                 {isBottomDrawerVisible && (
                   <section
                     className={`bg-white rounded-lg shadow-sm border border-[#00522C]/20 ${
@@ -257,7 +254,6 @@ function App() {
                                     toast.error(
                                       "Failed to delete item. Please try again."
                                     );
-                                    // Error is already handled by optimistic update rollback
                                   }
                                 }}
                               />
@@ -278,7 +274,6 @@ function App() {
             </div>
           )}
 
-          {/* Right side: Door */}
           {isDoorVisible && (
             <div className={hasDrawers ? "w-[30%]" : "w-full"}>
               <section className="bg-white rounded-lg shadow-sm border border-[#00522C]/20 h-full">
@@ -304,7 +299,6 @@ function App() {
                               toast.error(
                                 "Failed to delete item. Please try again."
                               );
-                              // Error is already handled by optimistic update rollback
                             }
                           }}
                         />

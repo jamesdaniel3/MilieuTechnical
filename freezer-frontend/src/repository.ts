@@ -1,7 +1,7 @@
 import { get, set, del } from "idb-keyval";
 import type { FreezerItem } from "./types";
 import { Location } from "./types";
-import { shouldSimulateFailure } from "./config";
+import { shouldSimulateFailure, getFailureDelay } from "./config";
 
 const STORE_KEY_PREFIX = "freezer:item:";
 const INDEX_ALL_KEYS = "freezer:index:all-keys";
@@ -39,8 +39,9 @@ class FreezerRepository {
   }
 
   async create(item: FreezerItem): Promise<void> {
-    // Simulate failure in development
+    // Simulate failure in development with delay
     if (shouldSimulateFailure()) {
+      await new Promise(resolve => setTimeout(resolve, getFailureDelay()));
       throw new SimulatedFailureError("Simulated failure during item creation");
     }
 
@@ -55,8 +56,9 @@ class FreezerRepository {
   }
 
   async update(item: FreezerItem): Promise<void> {
-    // Simulate failure in development
+    // Simulate failure in development with delay
     if (shouldSimulateFailure()) {
+      await new Promise(resolve => setTimeout(resolve, getFailureDelay()));
       throw new SimulatedFailureError("Simulated failure during item update");
     }
 
@@ -71,8 +73,9 @@ class FreezerRepository {
   }
 
   async delete(id: string): Promise<void> {
-    // Simulate failure in development
+    // Simulate failure in development with delay
     if (shouldSimulateFailure()) {
+      await new Promise(resolve => setTimeout(resolve, getFailureDelay()));
       throw new SimulatedFailureError("Simulated failure during item deletion");
     }
 
