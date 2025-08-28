@@ -4,7 +4,6 @@ import type { ReactNode } from "react";
 export function Modal({
   open,
   onClose,
-  title,
   children,
 }: {
   open: boolean;
@@ -13,7 +12,6 @@ export function Modal({
   children: ReactNode;
 }) {
   const dialogRef = useRef<HTMLDivElement>(null);
-  const firstFocusableRef = useRef<HTMLButtonElement>(null);
   const lastFocusableRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {

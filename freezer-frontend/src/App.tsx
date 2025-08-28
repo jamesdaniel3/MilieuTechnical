@@ -84,7 +84,16 @@ function App() {
     }
 
     return pool;
-  }, [items, filter, search, sections, freshnessFilter, showNext7Days]);
+  }, [
+    items,
+    filter,
+    search,
+    sections,
+    freshnessFilter,
+    showNext7Days,
+    getItemFreshness,
+    isExpiringInNext7Days,
+  ]);
 
   const editingItem = useMemo(
     () => items.find((i) => i.id === editingId),
