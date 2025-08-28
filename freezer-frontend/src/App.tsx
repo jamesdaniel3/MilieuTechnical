@@ -161,14 +161,14 @@ function App() {
   };
 
   return (
-    <div className="h-screen bg-[#fbfcee] md:overflow-hidden overflow-y-auto">
+    <div className="min-h-screen bg-[#fbfcee] md:h-screen md:overflow-hidden">
       {/* Skip link for keyboard users */}
       <a href="#main-content" className="skip-link">
         Skip to main content
       </a>
 
       {/* Mobile Header */}
-      <header className="md:hidden">
+      <header className="md:hidden sticky top-0 z-40">
         <MobileHeader
           search={search}
           onSearch={setSearch}
@@ -199,7 +199,7 @@ function App() {
 
       <main
         id="main-content"
-        className="w-[90vw] mx-auto p-4 pb-8 md:h-[calc(100vh-80px)] md:overflow-hidden md:pb-4"
+        className="w-[90vw] mx-auto p-4 pb-4 md:h-[calc(100vh-80px)] md:overflow-hidden"
       >
         <div className="flex flex-col md:flex-row gap-6 h-full">
           {hasDrawers && (
