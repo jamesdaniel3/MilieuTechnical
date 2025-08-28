@@ -67,16 +67,11 @@ export function Modal({
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
       <div
         ref={dialogRef}
-        className="relative bg-white dark:bg-neutral-800 rounded shadow-xl w-full max-w-lg mx-4 p-4"
+        className="relative bg-white rounded shadow-xl w-full max-w-lg mx-4 p-4 border border-[#00522C]/20"
       >
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-lg font-medium">{title}</h3>
-          <button
-            className="bg-gray-200 text-gray-900 dark:bg-neutral-700 dark:text-neutral-50"
-            onClick={onClose}
-            aria-label="Close"
-            ref={firstFocusableRef}
-          >
+          <h3 className="text-lg font-medium text-[#00522C]">{title}</h3>
+          <button onClick={onClose} aria-label="Close" ref={firstFocusableRef}>
             Close
           </button>
         </div>

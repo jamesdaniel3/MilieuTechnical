@@ -8,6 +8,7 @@ function makeItem(overrides: Partial<FreezerItem> = {}): FreezerItem {
     id: Math.random().toString(36).slice(2),
     name: "Chicken Breast",
     quantity: 2,
+    units: "pieces",
     location: Location.TopDrawer,
     addedAt: new Date("2025-01-01").toISOString(),
     expiresOn: new Date("2025-02-01").toISOString(),

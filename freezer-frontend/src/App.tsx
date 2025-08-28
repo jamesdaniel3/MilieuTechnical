@@ -5,6 +5,7 @@ import ItemForm from "./components/ItemForm";
 import Modal from "./components/Modal";
 import Header from "./components/Header";
 import ItemCard from "./components/ItemCard";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   const { items, createItem, updateItem, deleteItem } = useFreezer();
@@ -74,7 +75,7 @@ function App() {
   };
 
   return (
-    <div className="h-screen bg-gray-50 dark:bg-neutral-900 overflow-hidden">
+    <div className="h-screen bg-[#fbfcee] overflow-hidden">
       <Header
         search={search}
         onSearch={setSearch}
@@ -93,12 +94,12 @@ function App() {
                 {/* Top Drawer Section */}
                 {isTopDrawerVisible && (
                   <section
-                    className={`bg-white dark:bg-neutral-800 rounded-lg shadow-sm border border-gray-200 dark:border-neutral-700 ${
+                    className={`bg-white rounded-lg shadow-sm border border-[#00522C]/20 ${
                       visibleDrawers === 1 ? "h-full" : "h-[calc(50%-12px)]"
                     }`}
                   >
-                    <div className="p-4 border-b border-gray-200 dark:border-neutral-700">
-                      <h2 className="text-lg font-semibold text-gray-900 dark:text-neutral-100">
+                    <div className="p-4 border-b border-[#00522C]/20">
+                      <h2 className="text-lg font-semibold text-[#00522C]">
                         {Location.TopDrawer}
                       </h2>
                     </div>
@@ -119,7 +120,7 @@ function App() {
                         </div>
                       ) : (
                         <div className="flex items-center justify-center h-full">
-                          <p className="text-gray-500 dark:text-neutral-400 text-center">
+                          <p className="text-[#00522C]/60 text-center">
                             No items in {Location.TopDrawer}
                           </p>
                         </div>
@@ -131,12 +132,12 @@ function App() {
                 {/* Bottom Drawer Section */}
                 {isBottomDrawerVisible && (
                   <section
-                    className={`bg-white dark:bg-neutral-800 rounded-lg shadow-sm border border-gray-200 dark:border-neutral-700 ${
+                    className={`bg-white rounded-lg shadow-sm border border-[#00522C]/20 ${
                       visibleDrawers === 1 ? "h-full" : "h-[calc(50%-12px)]"
                     }`}
                   >
-                    <div className="p-4 border-b border-gray-200 dark:border-neutral-700">
-                      <h2 className="text-lg font-semibold text-gray-900 dark:text-neutral-100">
+                    <div className="p-4 border-b border-[#00522C]/20">
+                      <h2 className="text-lg font-semibold text-[#00522C]">
                         {Location.BottomDrawer}
                       </h2>
                     </div>
@@ -159,7 +160,7 @@ function App() {
                         </div>
                       ) : (
                         <div className="flex items-center justify-center h-full">
-                          <p className="text-gray-500 dark:text-neutral-400 text-center">
+                          <p className="text-[#00522C]/60 text-center">
                             No items in {Location.BottomDrawer}
                           </p>
                         </div>
@@ -174,9 +175,9 @@ function App() {
           {/* Right side: Door */}
           {isDoorVisible && (
             <div className={hasDrawers ? "w-[30%]" : "w-full"}>
-              <section className="bg-white dark:bg-neutral-800 rounded-lg shadow-sm border border-gray-200 dark:border-neutral-700 h-full">
-                <div className="p-4 border-b border-gray-200 dark:border-neutral-700">
-                  <h2 className="text-lg font-semibold text-gray-900 dark:text-neutral-100">
+              <section className="bg-white rounded-lg shadow-sm border border-[#00522C]/20 h-full">
+                <div className="p-4 border-b border-[#00522C]/20">
+                  <h2 className="text-lg font-semibold text-[#00522C]">
                     {Location.Door}
                   </h2>
                 </div>
@@ -197,7 +198,7 @@ function App() {
                     </div>
                   ) : (
                     <div className="flex items-center justify-center h-full">
-                      <p className="text-gray-500 dark:text-neutral-400 text-center">
+                      <p className="text-[#00522C]/60 text-center">
                         No items in {Location.Door}
                       </p>
                     </div>
@@ -208,7 +209,6 @@ function App() {
           )}
         </div>
 
-        {/* Add/Edit Item Modal */}
         <Modal
           open={isModalOpen}
           onClose={handleModalClose}
@@ -221,6 +221,18 @@ function App() {
           />
         </Modal>
       </div>
+
+      <ToastContainer
+        position="top-right"
+        autoClose={4000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        pauseOnHover
+        theme="light"
+      />
     </div>
   );
 }

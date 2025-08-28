@@ -10,6 +10,7 @@ export interface FreezerItem {
   id: string;
   name: string;
   quantity: number;
+  units: string;
   location: Location;
   addedAt: string; // ISO string for portability
   expiresOn: string; // ISO string

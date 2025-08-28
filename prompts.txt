@@ -19,9 +19,30 @@ Next Prompt:
 I want the logic for adding items to be handled through a modal. 
 Can you break out the item form into it's own component? 
 Additionally, I want to add items to the displayed items performantly.
-I'm not sure if we should just add a dependency to the useEffect that get's items so that when an item is submitted the useEffects runs again or if we can just add the item to the current state when that happens. 
-I think I would prefer to just update the state because I don't want the whole page to need to load when 1 item is added
 
 Agent response:
 
 created modal 
+
+
+I want you to create a header at the top of the page using header.tsx. 
+It should be sticky and have a border on only the bottom. On the far left, it should contain a search feature that allows for searching for items by name and has a 300 ms debounce. 
+It should also have a dropdown with check boxes that allows users to define which of the three sections they want to see info from
+
+
+
+I want the page to essentially have 4 sections. The header, and then a section for the top drawer, the bottom drawer, and the door. 
+The top and bottom drawer should containers take up about 70% of the container width and be stacked vertically. 
+The door container should take up the other 30% of the container width and be to the right of to the verical stack. 
+All containers should be viewable unless they are filtered out by the sections selector. 
+If there are no items in a section just leave a message saying there are no items.
+If there are too many items to fit in a section, let users scroll within the section, but do not have the page move. 
+Additionally, remove the table in each of these sections, create a new component called ItemCard, and use cards to display each item in the freezer
+
+
+I want to make some changes to the modal. 
+First, I want the add button in the bottom right corner and the cancel button in the bottom left corner, second, I want to get rid of the datepicker and just have users input text. 
+I want their to add a units field in addtion to a quntity field. It should be a text field with example text labled cups. 
+Finally, I want to implement toasts. If the user tries to submit with any invalid data, a toast will pop up telling them what they need to fix. 
+Additionally, the add button should have two states. 
+If the current data submitted is incomplete, it should be white with a green outline and green text. IF the data is valid, it should be green with white text

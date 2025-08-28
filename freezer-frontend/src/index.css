@@ -1,16 +1,70 @@
 @import "tailwindcss";
+@import "react-toastify/dist/ReactToastify.css";
 
-/* Light/dark base */
+/* Custom color scheme */
 :root {
-  color-scheme: light dark;
+  color-scheme: light;
+  --primary-green: #00522c;
+  --background-cream: #fbfcee;
 }
+
 body {
-  background: white;
-  color: #111827;
+  background: var(--background-cream);
+  color: var(--primary-green);
 }
-@media (prefers-color-scheme: dark) {
-  body {
-    background: #0a0a0a;
-    color: #f5f5f5;
-  }
+
+/* Custom button styles */
+button {
+  background-color: var(--primary-green) !important;
+  color: white !important;
+  border: none !important;
+  padding: 0.5rem 1rem !important;
+  border-radius: 0.375rem !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  transition: opacity 0.2s !important;
+}
+
+button:hover {
+  opacity: 0.9 !important;
+}
+
+button:disabled {
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+}
+
+/* Input styles */
+input,
+select,
+textarea {
+  border: 1px solid #00522c !important;
+  border-radius: 0.375rem !important;
+  padding: 0.5rem !important;
+  background: white !important;
+  color: #00522c !important;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none !important;
+  border-color: #00522c !important;
+  box-shadow: 0 0 0 2px rgba(0, 82, 44, 0.2) !important;
+}
+
+/* Custom toast styles */
+.Toastify__toast {
+  border-radius: 0.5rem !important;
+  font-family: inherit !important;
+}
+
+.Toastify__toast--error {
+  background-color: #ef4444 !important;
+  color: white !important;
+}
+
+.Toastify__toast--success {
+  background-color: #10b981 !important;
+  color: white !important;
 }
