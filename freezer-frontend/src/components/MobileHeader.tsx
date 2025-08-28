@@ -85,9 +85,14 @@ export function MobileHeader({
   };
 
   // Calculate selected counts for ARIA labels
-  const selectedSectionsCount = Object.values(sections).filter(Boolean).length;
-  const selectedFreshnessCount =
-    Object.values(freshnessFilter).filter(Boolean).length;
+  const selectedSectionsCount = useMemo(
+    () => Object.values(sections).filter(Boolean).length,
+    [sections]
+  );
+  const selectedFreshnessCount = useMemo(
+    () => Object.values(freshnessFilter).filter(Boolean).length,
+    [freshnessFilter]
+  );
 
   return (
     <div className="sticky top-0 z-40 bg-[#fbfcee]/90 backdrop-blur border-b border-[#00522C]/20">

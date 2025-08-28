@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import type { FreezerItem } from "../types";
 import { Location } from "../types";
 import { toast } from "react-toastify";
@@ -68,10 +68,13 @@ export function ItemForm({
     return newErrors;
   };
 
-  const isValid = Object.keys(validateForm()).length === 0;
+  const validationErrors = useMemo(
+    () => validateForm(),
+    [name, quantity, units, expiresOn]
+  );
+  const isValid = Object.keys(validationErrors).length === 0;
 
   const handleSubmit = () => {
-    const validationErrors = validateForm();
     setErrors(validationErrors);
 
     if (Object.keys(validationErrors).length > 0) {

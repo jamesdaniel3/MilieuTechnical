@@ -1,8 +1,9 @@
+import { useMemo, memo } from "react";
 import type { FreezerItem } from "../types";
 import editIcon from "../assets/edit-icon.png";
 import trashIcon from "../assets/trash-icon.png";
 
-export function ItemCard({
+const ItemCard = memo(function ItemCard({
   item,
   onEdit,
   onDelete,
@@ -13,15 +14,19 @@ export function ItemCard({
   onDelete: () => void;
   fullWidth?: boolean;
 }) {
-  const now = new Date();
-  const expiresDate = new Date(item.expiresOn);
-  const isExpired = expiresDate < now;
-  const isExpiringSoon =
-    !isExpired &&
-    expiresDate < new Date(now.getTime() + 3 * 24 * 60 * 60 * 1000); // 3 days
+  const itemStatus = useMemo(() => {
+    const now = new Date();
+    const expiresDate = new Date(item.expiresOn);
+    const isExpired = expiresDate < now;
+    const isExpiringSoon =
+      !isExpired &&
+      expiresDate < new Date(now.getTime() + 3 * 24 * 60 * 60 * 1000); // 3 days
+
+    return { isExpired, isExpiringSoon, expiresDate };
+  }, [item.expiresOn]);
 
   const getStatusBadge = () => {
-    if (isExpired) {
+    if (itemStatus.isExpired) {
       return (
         <span
           className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800"
@@ -30,7 +35,7 @@ export function ItemCard({
           Expired
         </span>
       );
-    } else if (isExpiringSoon) {
+    } else if (itemStatus.isExpiringSoon) {
       return (
         <span
           className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800"
@@ -60,10 +65,10 @@ export function ItemCard({
     });
   };
 
-  const expirationText = formatExpirationDate(expiresDate);
-  const statusText = isExpired
+  const expirationText = formatExpirationDate(itemStatus.expiresDate);
+  const statusText = itemStatus.isExpired
     ? "expired"
-    : isExpiringSoon
+    : itemStatus.isExpiringSoon
     ? "expiring soon"
     : "fresh";
 
@@ -147,6 +152,6 @@ export function ItemCard({
       </div>
     </div>
   );
-}
+});
 
 export default ItemCard;

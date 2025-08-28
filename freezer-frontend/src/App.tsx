@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useCallback } from "react";
 import { useFreezer } from "./useFreezer";
 import { Location } from "./types";
 import ItemForm from "./components/ItemForm";
@@ -30,7 +30,7 @@ function App() {
   });
 
   // Helper function to determine item freshness
-  const getItemFreshness = (expiresOn: string) => {
+  const getItemFreshness = useCallback((expiresOn: string) => {
     const now = new Date();
     const expiresDate = new Date(expiresOn);
     const isExpired = expiresDate < now;
@@ -41,15 +41,15 @@ function App() {
     if (isExpired) return "Expired";
     if (isExpiringSoon) return "Expiring Soon";
     return "Fresh";
-  };
+  }, []);
 
   // Helper function to check if item expires in next 7 days
-  const isExpiringInNext7Days = (expiresOn: string) => {
+  const isExpiringInNext7Days = useCallback((expiresOn: string) => {
     const now = new Date();
     const expiresDate = new Date(expiresOn);
     const sevenDaysFromNow = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
     return expiresDate >= now && expiresDate <= sevenDaysFromNow;
-  };
+  }, []);
 
   const filtered = useMemo(() => {
     let pool =
@@ -131,34 +131,59 @@ function App() {
   ).length;
   const hasDrawers = visibleDrawers > 0;
 
-  const handleEdit = (itemId: string) => {
+  const handleEdit = useCallback((itemId: string) => {
     setEditingId(itemId);
     setIsModalOpen(true);
-  };
+  }, []);
 
-  const handleModalClose = () => {
+  const handleModalClose = useCallback(() => {
     setIsModalOpen(false);
     setEditingId(null);
-  };
+  }, []);
 
-  const handleSave = async (item: import("./types").FreezerItem) => {
-    // Close modal immediately to show optimistic update
-    handleModalClose();
+  const handleSave = useCallback(
+    async (item: import("./types").FreezerItem) => {
+      // Close modal immediately to show optimistic update
+      handleModalClose();
 
-    try {
-      if (editingItem) {
-        await updateItem(item);
-      } else {
-        await createItem(item);
+      try {
+        if (editingItem) {
+          await updateItem(item);
+        } else {
+          await createItem(item);
+        }
+      } catch (error) {
+        console.error("Failed to save item:", error);
+
+        // Dismiss success toast and show error
+        toast.dismiss();
+        toast.error("Failed to save item. Changes have been rolled back.");
       }
-    } catch (error) {
-      console.error("Failed to save item:", error);
+    },
+    [handleModalClose, editingItem, updateItem, createItem]
+  );
 
-      // Dismiss success toast and show error
-      toast.dismiss();
-      toast.error("Failed to save item. Changes have been rolled back.");
-    }
-  };
+  const createDeleteHandler = useCallback(
+    (itemId: string) => {
+      return async () => {
+        try {
+          await deleteItem(itemId);
+          if (editingId === itemId) setEditingId(null);
+        } catch (error) {
+          console.error("Failed to delete item:", error);
+          toast.error("Failed to delete item. Please try again.");
+        }
+      };
+    },
+    [deleteItem, editingId]
+  );
+
+  const createEditHandler = useCallback(
+    (itemId: string) => {
+      return () => handleEdit(itemId);
+    },
+    [handleEdit]
+  );
 
   return (
     <div className="min-h-screen bg-[#fbfcee] md:h-screen md:overflow-hidden">
@@ -233,22 +258,8 @@ function App() {
                             <div key={item.id} role="listitem">
                               <ItemCard
                                 item={item}
-                                onEdit={() => handleEdit(item.id)}
-                                onDelete={async () => {
-                                  try {
-                                    await deleteItem(item.id);
-                                    if (editingId === item.id)
-                                      setEditingId(null);
-                                  } catch (error) {
-                                    console.error(
-                                      "Failed to delete item:",
-                                      error
-                                    );
-                                    toast.error(
-                                      "Failed to delete item. Please try again."
-                                    );
-                                  }
-                                }}
+                                onEdit={createEditHandler(item.id)}
+                                onDelete={createDeleteHandler(item.id)}
                               />
                             </div>
                           ))}
@@ -296,22 +307,8 @@ function App() {
                               <div key={item.id} role="listitem">
                                 <ItemCard
                                   item={item}
-                                  onEdit={() => handleEdit(item.id)}
-                                  onDelete={async () => {
-                                    try {
-                                      await deleteItem(item.id);
-                                      if (editingId === item.id)
-                                        setEditingId(null);
-                                    } catch (error) {
-                                      console.error(
-                                        "Failed to delete item:",
-                                        error
-                                      );
-                                      toast.error(
-                                        "Failed to delete item. Please try again."
-                                      );
-                                    }
-                                  }}
+                                  onEdit={createEditHandler(item.id)}
+                                  onDelete={createDeleteHandler(item.id)}
                                 />
                               </div>
                             )
@@ -364,18 +361,8 @@ function App() {
                           <ItemCard
                             item={item}
                             fullWidth={hasDrawers}
-                            onEdit={() => handleEdit(item.id)}
-                            onDelete={async () => {
-                              try {
-                                await deleteItem(item.id);
-                                if (editingId === item.id) setEditingId(null);
-                              } catch (error) {
-                                console.error("Failed to delete item:", error);
-                                toast.error(
-                                  "Failed to delete item. Please try again."
-                                );
-                              }
-                            }}
+                            onEdit={createEditHandler(item.id)}
+                            onDelete={createDeleteHandler(item.id)}
                           />
                         </div>
                       ))}
