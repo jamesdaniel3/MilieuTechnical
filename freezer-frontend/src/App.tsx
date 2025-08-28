@@ -4,6 +4,7 @@ import { Location } from "./types";
 import ItemForm from "./components/ItemForm";
 import Modal from "./components/Modal";
 import Header from "./components/Header";
+import type { FreshnessFilter } from "./components/Header";
 import ItemCard from "./components/ItemCard";
 import { ToastContainer } from "react-toastify";
 
@@ -13,26 +14,97 @@ function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [filter] = useState<Location | "All">("All");
   const [search, setSearch] = useState("");
+  const [freshnessFilter, setFreshnessFilter] = useState<
+    Record<FreshnessFilter, boolean>
+  >({
+    Fresh: true,
+    "Expiring Soon": true,
+    Expired: true,
+  });
+  const [showNext7Days, setShowNext7Days] = useState(false);
   const [sections, setSections] = useState<Record<Location, boolean>>({
     [Location.TopDrawer]: true,
     [Location.BottomDrawer]: true,
     [Location.Door]: true,
   });
 
+  // Helper function to determine item freshness
+  const getItemFreshness = (expiresOn: string) => {
+    const now = new Date();
+    const expiresDate = new Date(expiresOn);
+    const isExpired = expiresDate < now;
+    const isExpiringSoon =
+      !isExpired &&
+      expiresDate < new Date(now.getTime() + 3 * 24 * 60 * 60 * 1000); // 3 days
+
+    if (isExpired) return "Expired";
+    if (isExpiringSoon) return "Expiring Soon";
+    return "Fresh";
+  };
+
+  // Helper function to check if item expires in next 7 days
+  const isExpiringInNext7Days = (expiresOn: string) => {
+    const now = new Date();
+    const expiresDate = new Date(expiresOn);
+    const sevenDaysFromNow = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+    return expiresDate <= sevenDaysFromNow;
+  };
+
   const filtered = useMemo(() => {
-    const pool =
+    let pool =
       filter === "All" ? items : items.filter((i) => i.location === filter);
-    const bySection = pool.filter((i) => sections[i.location]);
+
+    // Apply section filter
+    pool = pool.filter((i) => sections[i.location]);
+
+    // Apply search filter
     const q = search.trim().toLowerCase();
-    return q
-      ? bySection.filter((i) => i.name.toLowerCase().includes(q))
-      : bySection;
-  }, [items, filter, search, sections]);
+    if (q) {
+      pool = pool.filter((i) => i.name.toLowerCase().includes(q));
+    }
+
+    // Apply freshness filter
+    const selectedFreshness = Object.entries(freshnessFilter)
+      .filter(([, selected]) => selected)
+      .map(([freshness]) => freshness as FreshnessFilter);
+
+    if (selectedFreshness.length > 0) {
+      pool = pool.filter((i) =>
+        selectedFreshness.includes(getItemFreshness(i.expiresOn))
+      );
+    }
+
+    // Apply next 7 days filter
+    if (showNext7Days) {
+      pool = pool.filter((i) => isExpiringInNext7Days(i.expiresOn));
+    }
+
+    return pool;
+  }, [items, filter, search, sections, freshnessFilter, showNext7Days]);
 
   const editingItem = useMemo(
     () => items.find((i) => i.id === editingId),
     [items, editingId]
   );
+
+  // Sort items by expiration date (expired first, then by how soon they expire)
+  const sortedItems = useMemo(() => {
+    return [...filtered].sort((a, b) => {
+      const now = new Date();
+      const aExpires = new Date(a.expiresOn);
+      const bExpires = new Date(b.expiresOn);
+
+      const aIsExpired = aExpires < now;
+      const bIsExpired = bExpires < now;
+
+      // Expired items come first
+      if (aIsExpired && !bIsExpired) return -1;
+      if (!aIsExpired && bIsExpired) return 1;
+
+      // If both are expired or both are not expired, sort by expiration date
+      return aExpires.getTime() - bExpires.getTime();
+    });
+  }, [filtered]);
 
   const itemsByLocation = useMemo(() => {
     const result = {
@@ -40,11 +112,11 @@ function App() {
       [Location.BottomDrawer]: [] as typeof items,
       [Location.Door]: [] as typeof items,
     };
-    filtered.forEach((item) => {
+    sortedItems.forEach((item) => {
       result[item.location].push(item);
     });
     return result;
-  }, [filtered]);
+  }, [sortedItems]);
 
   // Calculate which sections are visible
   const isDoorVisible = sections[Location.Door];
@@ -81,6 +153,10 @@ function App() {
         onSearch={setSearch}
         sections={sections}
         onSectionsChange={setSections}
+        freshnessFilter={freshnessFilter}
+        onFreshnessFilterChange={setFreshnessFilter}
+        showNext7Days={showNext7Days}
+        onShowNext7DaysChange={setShowNext7Days}
         onAdd={() => setIsModalOpen(true)}
       />
 

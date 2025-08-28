@@ -3,23 +3,35 @@ import { Location } from "../types";
 
 export type SectionMap = Record<Location, boolean>;
 
+export type FreshnessFilter = "Fresh" | "Expiring Soon" | "Expired";
+
 export function Header({
   search,
   onSearch,
   sections,
   onSectionsChange,
+  freshnessFilter,
+  onFreshnessFilterChange,
+  showNext7Days,
+  onShowNext7DaysChange,
   onAdd,
 }: {
   search: string;
   onSearch: (q: string) => void;
   sections: SectionMap;
   onSectionsChange: (sections: SectionMap) => void;
+  freshnessFilter: Record<FreshnessFilter, boolean>;
+  onFreshnessFilterChange: (filter: Record<FreshnessFilter, boolean>) => void;
+  showNext7Days: boolean;
+  onShowNext7DaysChange: (show: boolean) => void;
   onAdd: () => void;
 }) {
   const [internal, setInternal] = useState(search);
   const [open, setOpen] = useState(false);
+  const [freshnessOpen, setFreshnessOpen] = useState(false);
   const timeoutRef = useRef<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const freshnessContainerRef = useRef<HTMLDivElement>(null);
 
   // Keep local input in sync with external state
   useEffect(() => {
@@ -40,17 +52,20 @@ export function Header({
   // Close dropdown on outside click
   useEffect(() => {
     function onDocClick(e: MouseEvent) {
-      if (!open) return;
+      if (!open && !freshnessOpen) return;
       if (
         containerRef.current &&
-        !containerRef.current.contains(e.target as Node)
+        !containerRef.current.contains(e.target as Node) &&
+        freshnessContainerRef.current &&
+        !freshnessContainerRef.current.contains(e.target as Node)
       ) {
         setOpen(false);
+        setFreshnessOpen(false);
       }
     }
     document.addEventListener("mousedown", onDocClick);
     return () => document.removeEventListener("mousedown", onDocClick);
-  }, [open]);
+  }, [open, freshnessOpen]);
 
   const allChecked = useMemo(
     () =>
@@ -58,6 +73,14 @@ export function Header({
       sections[Location.BottomDrawer] &&
       sections[Location.Door],
     [sections]
+  );
+
+  const allFreshnessChecked = useMemo(
+    () =>
+      freshnessFilter["Fresh"] &&
+      freshnessFilter["Expiring Soon"] &&
+      freshnessFilter["Expired"],
+    [freshnessFilter]
   );
 
   const toggle = (loc: Location) => {
@@ -69,6 +92,21 @@ export function Header({
       [Location.TopDrawer]: value,
       [Location.BottomDrawer]: value,
       [Location.Door]: value,
+    });
+  };
+
+  const toggleFreshness = (freshness: FreshnessFilter) => {
+    onFreshnessFilterChange({
+      ...freshnessFilter,
+      [freshness]: !freshnessFilter[freshness],
+    });
+  };
+
+  const setAllFreshness = (value: boolean) => {
+    onFreshnessFilterChange({
+      Fresh: value,
+      "Expiring Soon": value,
+      Expired: value,
     });
   };
 
@@ -86,6 +124,8 @@ export function Header({
             onChange={(e) => setInternal(e.target.value)}
           />
         </div>
+
+        {/* Sections Filter */}
         <div className="relative" ref={containerRef}>
           <button onClick={() => setOpen((v) => !v)}>Sections</button>
           {open && (
@@ -128,6 +168,61 @@ export function Header({
               </div>
             </div>
           )}
+        </div>
+
+        {/* Freshness Filter */}
+        <div className="relative" ref={freshnessContainerRef}>
+          <button onClick={() => setFreshnessOpen((v) => !v)}>Freshness</button>
+          {freshnessOpen && (
+            <div className="absolute right-0 mt-2 w-48 rounded border border-[#00522C]/20 bg-white shadow p-3">
+              <label className="flex items-center gap-2 mb-2">
+                <input
+                  type="checkbox"
+                  checked={allFreshnessChecked}
+                  onChange={(e) => setAllFreshness(e.target.checked)}
+                />
+                <span className="text-[#00522C]">Select all</span>
+              </label>
+              <div className="space-y-2">
+                <label className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={freshnessFilter["Fresh"]}
+                    onChange={() => toggleFreshness("Fresh")}
+                  />
+                  <span className="text-[#00522C]">Fresh</span>
+                </label>
+                <label className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={freshnessFilter["Expiring Soon"]}
+                    onChange={() => toggleFreshness("Expiring Soon")}
+                  />
+                  <span className="text-[#00522C]">Expiring Soon</span>
+                </label>
+                <label className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={freshnessFilter["Expired"]}
+                    onChange={() => toggleFreshness("Expired")}
+                  />
+                  <span className="text-[#00522C]">Expired</span>
+                </label>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Next 7 Days Filter */}
+        <div className="flex items-center gap-2">
+          <label className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              checked={showNext7Days}
+              onChange={(e) => onShowNext7DaysChange(e.target.checked)}
+            />
+            <span className="text-[#00522C] text-sm">Next 7 days</span>
+          </label>
         </div>
       </div>
     </div>

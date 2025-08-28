@@ -54,3 +54,10 @@ Expiring soon means that it expires within 3 days of the current time. On the ne
 On the last line, we should use the edit icon and the trash icon to create buttons for edit and delete. 
 These icons are black and I want them to be white on a green background, so be sure to invert the pngs. 
 Since mulitple of these will fit on each line in the box, make sure their containers allow for multiple to be added before a break and maintain vertical scrolling
+
+
+can you list the cards in each section in order by how soon they expire? 
+Expired foods can go first, then sort by expiration date - current date. 
+Make sure this order is maintained when items are added. 
+ADditionally, can you add another filter to the header that allows for filtering food by fresh, expiring soon, and expired? 
+Finally, can you add a radio button to the header that allows for user to look at only food expiring in the next 7 days
