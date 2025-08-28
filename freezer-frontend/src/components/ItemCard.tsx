@@ -6,10 +6,12 @@ export function ItemCard({
   item,
   onEdit,
   onDelete,
+  fullWidth = false,
 }: {
   item: FreezerItem;
   onEdit: () => void;
   onDelete: () => void;
+  fullWidth?: boolean;
 }) {
   const now = new Date();
   const expiresDate = new Date(item.expiresOn);
@@ -41,7 +43,11 @@ export function ItemCard({
   };
 
   return (
-    <div className="bg-white rounded-lg border border-[#00522C]/20 p-3 shadow-sm w-48 flex-shrink-0 hover:border-[#00522C] hover:border-2">
+    <div
+      className={`bg-white rounded-lg border border-[#00522C]/20 p-3 shadow-sm hover:border-[#00522C] hover:border-2 ${
+        fullWidth ? "w-full" : "w-full md:w-64"
+      } ${!fullWidth ? "h-40 flex flex-col" : ""}`}
+    >
       <div className="flex justify-between items-start mb-2">
         <h3 className="font-medium text-[#00522C] truncate flex-1 mr-2">
           {item.name}
@@ -49,11 +55,29 @@ export function ItemCard({
         {getStatusBadge()}
       </div>
 
-      <div className="text-sm text-[#00522C]/70 mb-3">
+      <div className="text-sm text-[#00522C]/70 mb-2">
         {item.quantity} {item.units}
       </div>
 
-      <div className="flex gap-2">
+      {item.notes && (
+        <div className="text-xs text-[#00522C]/60 mb-3 overflow-hidden flex-1">
+          <div
+            className="line-clamp-2"
+            style={{
+              display: "-webkit-box",
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: "vertical",
+              overflow: "hidden",
+            }}
+          >
+            {item.notes}
+          </div>
+        </div>
+      )}
+
+      {!item.notes && !fullWidth && <div className="flex-1"></div>}
+
+      <div className="flex gap-2 mt-auto">
         <button
           onClick={onEdit}
           className="flex-1 bg-[#00522C] hover:bg-[#00522C]/80 text-white p-2 rounded-md transition-colors duration-200 flex items-center justify-center"

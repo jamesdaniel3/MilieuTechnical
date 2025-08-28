@@ -101,11 +101,17 @@ export function ItemForm({
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="e.g., Chicken"
+            maxLength={25}
             className={errors.name ? "border-red-500" : ""}
           />
-          {errors.name && (
-            <span className="text-xs text-red-500">{errors.name}</span>
-          )}
+          <div className="flex justify-between items-center">
+            {errors.name && (
+              <span className="text-xs text-red-500">{errors.name}</span>
+            )}
+            <span className="text-xs text-[#00522C]/60 ml-auto">
+              {name.length}/25
+            </span>
+          </div>
         </label>
 
         <label className="flex flex-col gap-1">
@@ -169,7 +175,12 @@ export function ItemForm({
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
           placeholder="Optional notes..."
+          maxLength={75}
+          rows={3}
         />
+        <div className="flex justify-end">
+          <span className="text-xs text-[#00522C]/60">{notes.length}/75</span>
+        </div>
       </label>
 
       <div className="flex justify-between pt-4">

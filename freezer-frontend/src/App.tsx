@@ -156,7 +156,7 @@ function App() {
     }
   };
   return (
-    <div className="h-screen bg-[#fbfcee] overflow-hidden">
+    <div className="h-screen bg-[#fbfcee] md:overflow-hidden overflow-y-auto">
       <Header
         search={search}
         onSearch={setSearch}
@@ -169,15 +169,17 @@ function App() {
         onAdd={() => setIsModalOpen(true)}
       />
 
-      <div className="w-[90vw] mx-auto p-4 h-[calc(100vh-80px)]">
-        <div className="flex gap-6 h-full">
+      <div className="w-[90vw] mx-auto p-4 pb-8 md:h-[calc(100vh-80px)]">
+        <div className="flex flex-col md:flex-row gap-6 h-full">
           {hasDrawers && (
-            <div className={isDoorVisible ? "w-[70%]" : "w-full"}>
-              <div className="flex flex-col gap-6 h-full overflow-hidden">
+            <div className={isDoorVisible ? "w-full md:w-[70%]" : "w-full"}>
+              <div className="flex flex-col gap-6 md:h-full md:overflow-hidden">
                 {isTopDrawerVisible && (
                   <section
                     className={`bg-white rounded-lg shadow-sm border border-[#00522C]/20 ${
-                      visibleDrawers === 1 ? "h-full" : "h-[calc(50%-12px)]"
+                      visibleDrawers === 1
+                        ? "md:h-full"
+                        : "md:h-[calc(50%-12px)]"
                     }`}
                   >
                     <div className="p-4 border-b border-[#00522C]/20">
@@ -185,9 +187,9 @@ function App() {
                         {Location.TopDrawer}
                       </h2>
                     </div>
-                    <div className="p-4 overflow-y-auto h-[calc(100%-64px)]">
+                    <div className="p-4 md:overflow-y-auto md:h-[calc(100%-64px)]">
                       {itemsByLocation[Location.TopDrawer].length > 0 ? (
-                        <div className="flex flex-wrap gap-3">
+                        <div className="flex flex-wrap gap-4">
                           {itemsByLocation[Location.TopDrawer].map((item) => (
                             <ItemCard
                               key={item.id}
@@ -224,7 +226,9 @@ function App() {
                 {isBottomDrawerVisible && (
                   <section
                     className={`bg-white rounded-lg shadow-sm border border-[#00522C]/20 ${
-                      visibleDrawers === 1 ? "h-full" : "h-[calc(50%-12px)]"
+                      visibleDrawers === 1
+                        ? "md:h-full"
+                        : "md:h-[calc(50%-12px)]"
                     }`}
                   >
                     <div className="p-4 border-b border-[#00522C]/20">
@@ -232,9 +236,9 @@ function App() {
                         {Location.BottomDrawer}
                       </h2>
                     </div>
-                    <div className="p-4 overflow-y-auto h-[calc(100%-64px)]">
+                    <div className="p-4 md:overflow-y-auto md:h-[calc(100%-64px)]">
                       {itemsByLocation[Location.BottomDrawer].length > 0 ? (
-                        <div className="flex flex-wrap gap-3">
+                        <div className="flex flex-wrap gap-4">
                           {itemsByLocation[Location.BottomDrawer].map(
                             (item) => (
                               <ItemCard
@@ -275,20 +279,21 @@ function App() {
           )}
 
           {isDoorVisible && (
-            <div className={hasDrawers ? "w-[30%]" : "w-full"}>
-              <section className="bg-white rounded-lg shadow-sm border border-[#00522C]/20 h-full">
+            <div className={hasDrawers ? "w-full md:w-[30%]" : "w-full"}>
+              <section className="bg-white rounded-lg shadow-sm border border-[#00522C]/20 md:h-full">
                 <div className="p-4 border-b border-[#00522C]/20">
                   <h2 className="text-lg font-semibold text-[#00522C]">
                     {Location.Door}
                   </h2>
                 </div>
-                <div className="p-4 overflow-y-auto h-[calc(100%-64px)]">
+                <div className="p-4 md:overflow-y-auto md:h-[calc(100%-64px)]">
                   {itemsByLocation[Location.Door].length > 0 ? (
-                    <div className="flex flex-wrap gap-3">
+                    <div className="flex flex-col gap-3">
                       {itemsByLocation[Location.Door].map((item) => (
                         <ItemCard
                           key={item.id}
                           item={item}
+                          fullWidth={true}
                           onEdit={() => handleEdit(item.id)}
                           onDelete={async () => {
                             try {
