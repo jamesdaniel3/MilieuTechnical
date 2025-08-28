@@ -1,7 +1,8 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { freezerRepository } from "../repository";
+import { freezerRepository, SimulatedFailureError } from "../repository";
 import type { FreezerItem } from "../types";
 import { Location } from "../types";
+import { setGuaranteedFailure } from "../config";
 
 function makeItem(overrides: Partial<FreezerItem> = {}): FreezerItem {
   const base: FreezerItem = {
@@ -20,6 +21,8 @@ function makeItem(overrides: Partial<FreezerItem> = {}): FreezerItem {
 describe("freezerRepository", () => {
   beforeEach(async () => {
     await freezerRepository.clearAll();
+    // Reset guaranteed failure flag
+    setGuaranteedFailure(false);
   });
 
   it("creates and retrieves an item", async () => {
@@ -67,5 +70,25 @@ describe("freezerRepository", () => {
     expect(tops.map((i) => i.id).sort()).toEqual(["a", "c"]);
     expect(bottoms.map((i) => i.id)).toEqual(["b"]);
     expect(doors.length).toBe(0);
+  });
+
+  it("throws SimulatedFailureError when guaranteed failure is set", async () => {
+    setGuaranteedFailure(true);
+    const item = makeItem();
+
+    await expect(freezerRepository.create(item)).rejects.toThrow(
+      SimulatedFailureError
+    );
+    await expect(freezerRepository.update(item)).rejects.toThrow(
+      SimulatedFailureError
+    );
+  });
+
+  it("does not throw error when guaranteed failure is disabled", async () => {
+    setGuaranteedFailure(false);
+    const item = makeItem();
+
+    await expect(freezerRepository.create(item)).resolves.not.toThrow();
+    await expect(freezerRepository.update(item)).resolves.not.toThrow();
   });
 });

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { freezerRepository } from "./repository";
+import { freezerRepository, SimulatedFailureError } from "./repository";
 import type { FreezerItem } from "./types";
 import { Location } from "./types";
 
@@ -21,25 +21,95 @@ export function useFreezer() {
     };
   }, []);
 
-  const createItem = useCallback(async (item: FreezerItem) => {
-    await freezerRepository.create(item);
-    // Optimistically update local state without re-fetching
-    setItems((prev) => {
-      const next = prev.slice();
-      next.push(item);
-      return next;
-    });
-  }, []);
+  const createItem = useCallback(
+    async (item: FreezerItem) => {
+      // Store the current state for potential rollback
+      const previousItems = items;
 
-  const updateItem = useCallback(async (item: FreezerItem) => {
-    await freezerRepository.update(item);
-    setItems((prev) => prev.map((it) => (it.id === item.id ? item : it)));
-  }, []);
+      // Optimistically update local state
+      setItems((prev) => {
+        const next = prev.slice();
+        next.push(item);
+        return next;
+      });
 
-  const deleteItem = useCallback(async (id: string) => {
-    await freezerRepository.delete(id);
-    setItems((prev) => prev.filter((it) => it.id !== id));
-  }, []);
+      try {
+        await freezerRepository.create(item);
+      } catch (error) {
+        // Rollback on failure
+        setItems(previousItems);
+
+        if (error instanceof SimulatedFailureError) {
+          console.warn(
+            "Simulated failure occurred during item creation:",
+            error.message
+          );
+        }
+
+        // Re-throw the error so the UI can handle it
+        throw error;
+      }
+    },
+    [items]
+  );
+
+  const updateItem = useCallback(
+    async (item: FreezerItem) => {
+      // Store the current state for potential rollback
+      const previousItems = items;
+      const previousItem = items.find((i) => i.id === item.id);
+
+      // Optimistically update local state
+      setItems((prev) => prev.map((it) => (it.id === item.id ? item : it)));
+
+      try {
+        await freezerRepository.update(item);
+      } catch (error) {
+        // Rollback on failure
+        setItems(previousItems);
+
+        if (error instanceof SimulatedFailureError) {
+          console.warn(
+            "Simulated failure occurred during item update:",
+            error.message
+          );
+        }
+
+        // Re-throw the error so the UI can handle it
+        throw error;
+      }
+    },
+    [items]
+  );
+
+  const deleteItem = useCallback(
+    async (id: string) => {
+      // Store the current state for potential rollback
+      const previousItems = items;
+      const deletedItem = items.find((i) => i.id === id);
+
+      // Optimistically update local state
+      setItems((prev) => prev.filter((it) => it.id !== id));
+
+      try {
+        await freezerRepository.delete(id);
+      } catch (error) {
+        // Rollback on failure
+        setItems(previousItems);
+
+        if (error instanceof SimulatedFailureError) {
+          console.warn(
+            "Simulated failure occurred during item deletion:",
+            error.message
+          );
+        }
+
+        // Re-throw the error so the UI can handle it
+        throw error;
+      }
+    },
+    [items]
+  );
 
   const getByLocation = useCallback(
     async (location: Location): Promise<FreezerItem[]> => {

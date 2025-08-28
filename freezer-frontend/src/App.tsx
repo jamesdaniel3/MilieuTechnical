@@ -6,7 +6,7 @@ import Modal from "./components/Modal";
 import Header from "./components/Header";
 import type { FreshnessFilter } from "./components/Header";
 import ItemCard from "./components/ItemCard";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 
 function App() {
   const { items, createItem, updateItem, deleteItem } = useFreezer();
@@ -138,12 +138,19 @@ function App() {
   };
 
   const handleSave = async (item: import("./types").FreezerItem) => {
-    if (editingItem) {
-      await updateItem(item);
-    } else {
-      await createItem(item);
+    try {
+      if (editingItem) {
+        await updateItem(item);
+      } else {
+        await createItem(item);
+      }
+      handleModalClose();
+    } catch (error) {
+      // Error is already handled by the optimistic update rollback
+      console.error("Failed to save item:", error);
+      toast.error("Failed to save item. Please try again.");
+      // Don't close the modal on error so user can retry
     }
-    handleModalClose();
   };
 
   return (
@@ -188,8 +195,19 @@ function App() {
                               item={item}
                               onEdit={() => handleEdit(item.id)}
                               onDelete={async () => {
-                                await deleteItem(item.id);
-                                if (editingId === item.id) setEditingId(null);
+                                try {
+                                  await deleteItem(item.id);
+                                  if (editingId === item.id) setEditingId(null);
+                                } catch (error) {
+                                  console.error(
+                                    "Failed to delete item:",
+                                    error
+                                  );
+                                  toast.error(
+                                    "Failed to delete item. Please try again."
+                                  );
+                                  // Error is already handled by optimistic update rollback
+                                }
                               }}
                             />
                           ))}
@@ -227,8 +245,20 @@ function App() {
                                 item={item}
                                 onEdit={() => handleEdit(item.id)}
                                 onDelete={async () => {
-                                  await deleteItem(item.id);
-                                  if (editingId === item.id) setEditingId(null);
+                                  try {
+                                    await deleteItem(item.id);
+                                    if (editingId === item.id)
+                                      setEditingId(null);
+                                  } catch (error) {
+                                    console.error(
+                                      "Failed to delete item:",
+                                      error
+                                    );
+                                    toast.error(
+                                      "Failed to delete item. Please try again."
+                                    );
+                                    // Error is already handled by optimistic update rollback
+                                  }
                                 }}
                               />
                             )
@@ -266,8 +296,16 @@ function App() {
                           item={item}
                           onEdit={() => handleEdit(item.id)}
                           onDelete={async () => {
-                            await deleteItem(item.id);
-                            if (editingId === item.id) setEditingId(null);
+                            try {
+                              await deleteItem(item.id);
+                              if (editingId === item.id) setEditingId(null);
+                            } catch (error) {
+                              console.error("Failed to delete item:", error);
+                              toast.error(
+                                "Failed to delete item. Please try again."
+                              );
+                              // Error is already handled by optimistic update rollback
+                            }
                           }}
                         />
                       ))}

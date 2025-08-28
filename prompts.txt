@@ -61,3 +61,11 @@ Expired foods can go first, then sort by expiration date - current date.
 Make sure this order is maintained when items are added. 
 ADditionally, can you add another filter to the header that allows for filtering food by fresh, expiring soon, and expired? 
 Finally, can you add a radio button to the header that allows for user to look at only food expiring in the next 7 days
+
+
+Now, I want to simulate real world failure. 
+Create an environment variable for DEV/PRODUCTION and set it to DEV. 
+On write requests (creating new items and editing old items), introduce a 10% failure rate. 
+You can just generate a number from 1-10 and if it is 10, throw an error. 
+We want to use optimistic updates and rollback changes on fails, so implement this on the front end. 
+Be sure that the simulated failure is only used in development environments.

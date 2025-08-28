@@ -1,9 +1,18 @@
 import { get, set, del } from "idb-keyval";
 import type { FreezerItem } from "./types";
 import { Location } from "./types";
+import { shouldSimulateFailure } from "./config";
 
 const STORE_KEY_PREFIX = "freezer:item:";
 const INDEX_ALL_KEYS = "freezer:index:all-keys";
+
+// Custom error for simulated failures
+export class SimulatedFailureError extends Error {
+  constructor(message: string = "Simulated failure for testing") {
+    super(message);
+    this.name = "SimulatedFailureError";
+  }
+}
 
 class FreezerRepository {
   private cacheById: Map<string, FreezerItem> = new Map();
@@ -30,6 +39,11 @@ class FreezerRepository {
   }
 
   async create(item: FreezerItem): Promise<void> {
+    // Simulate failure in development
+    if (shouldSimulateFailure()) {
+      throw new SimulatedFailureError("Simulated failure during item creation");
+    }
+
     await this.ensureInitialized();
     await set(this.keyFor(item.id), item);
     this.cacheById.set(item.id, item);
@@ -41,6 +55,11 @@ class FreezerRepository {
   }
 
   async update(item: FreezerItem): Promise<void> {
+    // Simulate failure in development
+    if (shouldSimulateFailure()) {
+      throw new SimulatedFailureError("Simulated failure during item update");
+    }
+
     await this.ensureInitialized();
     await set(this.keyFor(item.id), item);
     this.cacheById.set(item.id, item);
@@ -52,6 +71,11 @@ class FreezerRepository {
   }
 
   async delete(id: string): Promise<void> {
+    // Simulate failure in development
+    if (shouldSimulateFailure()) {
+      throw new SimulatedFailureError("Simulated failure during item deletion");
+    }
+
     await this.ensureInitialized();
     await del(this.keyFor(id));
     this.cacheById.delete(id);
