@@ -22,7 +22,6 @@ export const isDevelopment = config.environment === "development";
 export const isTest = config.environment === "test";
 
 export const shouldSimulateFailure = (): boolean => {
-  return true;
   if (isTest && config.test.guaranteeFailure) {
     return true;
   }
