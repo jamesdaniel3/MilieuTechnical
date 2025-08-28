@@ -104,7 +104,7 @@ export function MobileHeader({
         {/* Search Bar */}
         <div className="flex-1">
           <input
-            className="w-full px-3 py-2 rounded-lg border border-[#00522C]/20 bg-white focus:outline-none focus:border-[#00522C] focus:ring-1 focus:ring-[#00522C]"
+            className="w-full px-3 py-2 rounded-2xl border border-[#00522C]/20 bg-[#fbfcee] focus:outline-none focus:border-[#00522C] focus:ring-1 focus:ring-[#00522C] appearance-none"
             placeholder="Search by name..."
             value={internal}
             onChange={(e) => setInternal(e.target.value)}

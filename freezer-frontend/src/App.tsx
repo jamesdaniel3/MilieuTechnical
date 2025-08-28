@@ -411,7 +411,7 @@ function App() {
 
       <ToastContainer
         position="top-right"
-        autoClose={4000}
+        autoClose={2500}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick
@@ -419,6 +419,7 @@ function App() {
         pauseOnFocusLoss
         pauseOnHover
         theme="light"
+        closeButton={false}
         aria-label="Notifications"
       />
     </div>

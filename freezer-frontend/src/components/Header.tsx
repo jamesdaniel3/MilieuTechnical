@@ -157,7 +157,7 @@ export function Header({
         </div>
         <div className="flex-1 flex justify-center">
           <input
-            className="w-full max-w-lg px-3 py-2 rounded border border-[#00522C]/20 focus:outline-none focus:border-[#00522C] focus:ring-1 focus:ring-[#00522C]"
+            className="w-full max-w-lg px-3 py-2 rounded-2xl border border-[#00522C]/20 bg-[#fbfcee] focus:outline-none focus:border-[#00522C] focus:ring-1 focus:ring-[#00522C] appearance-none"
             placeholder="Search by name..."
             value={internal}
             onChange={(e) => setInternal(e.target.value)}

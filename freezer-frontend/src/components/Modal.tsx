@@ -47,9 +47,9 @@ export function Modal({
 
     document.addEventListener("keydown", handleKey, true);
 
-    // Focus the first focusable element when modal opens
+    // Focus the first input field when modal opens (prefer input over button)
     const toFocus = dialogRef.current?.querySelector<HTMLElement>(
-      'input, button, textarea, select, [tabindex]:not([tabindex="-1"])'
+      'input:not([type="hidden"]), textarea, select, [tabindex]:not([tabindex="-1"])'
     );
     toFocus?.focus();
 
@@ -79,11 +79,11 @@ export function Modal({
       />
       <div
         ref={dialogRef}
-        className="relative bg-white rounded shadow-xl w-full max-w-lg mx-4 p-4 border border-[#00522C]/20"
+        className="relative bg-white rounded shadow-xl w-full max-w-lg mx-4 p-3 border border-[#00522C]/20"
         role="document"
         id="modal-content"
       >
-        <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center justify-between mb-2">
           {title && (
             <h3 id="modal-title" className="text-lg font-medium text-[#00522C]">
               {title}
