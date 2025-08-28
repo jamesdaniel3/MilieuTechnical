@@ -105,7 +105,7 @@ function App() {
                     </div>
                     <div className="p-4 overflow-y-auto h-[calc(100%-64px)]">
                       {itemsByLocation[Location.TopDrawer].length > 0 ? (
-                        <div className="space-y-4">
+                        <div className="flex flex-wrap gap-3">
                           {itemsByLocation[Location.TopDrawer].map((item) => (
                             <ItemCard
                               key={item.id}
@@ -143,7 +143,7 @@ function App() {
                     </div>
                     <div className="p-4 overflow-y-auto h-[calc(100%-64px)]">
                       {itemsByLocation[Location.BottomDrawer].length > 0 ? (
-                        <div className="space-y-4">
+                        <div className="flex flex-wrap gap-3">
                           {itemsByLocation[Location.BottomDrawer].map(
                             (item) => (
                               <ItemCard
@@ -183,7 +183,7 @@ function App() {
                 </div>
                 <div className="p-4 overflow-y-auto h-[calc(100%-64px)]">
                   {itemsByLocation[Location.Door].length > 0 ? (
-                    <div className="grid gap-4">
+                    <div className="flex flex-wrap gap-3">
                       {itemsByLocation[Location.Door].map((item) => (
                         <ItemCard
                           key={item.id}

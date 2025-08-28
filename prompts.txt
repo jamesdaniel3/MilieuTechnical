@@ -46,3 +46,11 @@ I want their to add a units field in addtion to a quntity field. It should be a 
 Finally, I want to implement toasts. If the user tries to submit with any invalid data, a toast will pop up telling them what they need to fix. 
 Additionally, the add button should have two states. 
 If the current data submitted is incomplete, it should be white with a green outline and green text. IF the data is valid, it should be green with white text
+
+
+I want to rewrite the itemCard component. I want it to be much more compact. 
+It should feature text showing the name of the item in the top left and a badge in the rop right showing whether it is freshm epxiring soon, or expired. 
+Expiring soon means that it expires within 3 days of the current time. On the next line there should be subtext showing the quantity and unit. 
+On the last line, we should use the edit icon and the trash icon to create buttons for edit and delete. 
+These icons are black and I want them to be white on a green background, so be sure to invert the pngs. 
+Since mulitple of these will fit on each line in the box, make sure their containers allow for multiple to be added before a break and maintain vertical scrolling
