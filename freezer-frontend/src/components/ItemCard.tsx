@@ -69,9 +69,9 @@ export function ItemCard({
 
   return (
     <div
-      className={`bg-white rounded-lg border border-[#00522C]/20 p-3 shadow-sm hover:border-[#00522C] hover:border-2 ${
-        fullWidth ? "w-full" : "w-full md:w-64"
-      } ${!fullWidth ? "h-40 flex flex-col" : ""}`}
+      className={`bg-white rounded-lg border border-[#00522C]/20 p-3 shadow-sm hover:border-[#00522C] hover:border-2 w-full ${
+        !fullWidth ? "md:w-64 h-40 flex flex-col" : ""
+      }`}
       role="article"
       aria-label={`${item.name}, ${item.quantity} ${item.units}, ${statusText}, expires ${expirationText}`}
     >

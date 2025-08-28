@@ -161,6 +161,12 @@ export function MobileHeader({
                       type="checkbox"
                       checked={sections[Location.TopDrawer]}
                       onChange={() => toggle(Location.TopDrawer)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          toggle(Location.TopDrawer);
+                        }
+                      }}
                       aria-label={`${Location.TopDrawer} section ${
                         sections[Location.TopDrawer]
                           ? "selected"
@@ -175,6 +181,12 @@ export function MobileHeader({
                       type="checkbox"
                       checked={sections[Location.BottomDrawer]}
                       onChange={() => toggle(Location.BottomDrawer)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          toggle(Location.BottomDrawer);
+                        }
+                      }}
                       aria-label={`${Location.BottomDrawer} section ${
                         sections[Location.BottomDrawer]
                           ? "selected"
@@ -191,6 +203,12 @@ export function MobileHeader({
                       type="checkbox"
                       checked={sections[Location.Door]}
                       onChange={() => toggle(Location.Door)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          toggle(Location.Door);
+                        }
+                      }}
                       aria-label={`${Location.Door} section ${
                         sections[Location.Door] ? "selected" : "not selected"
                       }`}
@@ -216,6 +234,12 @@ export function MobileHeader({
                       type="checkbox"
                       checked={freshnessFilter["Fresh"]}
                       onChange={() => toggleFreshness("Fresh")}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          toggleFreshness("Fresh");
+                        }
+                      }}
                       aria-label={`Fresh items ${
                         freshnessFilter["Fresh"] ? "selected" : "not selected"
                       }`}
@@ -228,6 +252,12 @@ export function MobileHeader({
                       type="checkbox"
                       checked={freshnessFilter["Expiring Soon"]}
                       onChange={() => toggleFreshness("Expiring Soon")}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          toggleFreshness("Expiring Soon");
+                        }
+                      }}
                       aria-label={`Expiring soon items ${
                         freshnessFilter["Expiring Soon"]
                           ? "selected"
@@ -242,6 +272,12 @@ export function MobileHeader({
                       type="checkbox"
                       checked={freshnessFilter["Expired"]}
                       onChange={() => toggleFreshness("Expired")}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          toggleFreshness("Expired");
+                        }
+                      }}
                       aria-label={`Expired items ${
                         freshnessFilter["Expired"] ? "selected" : "not selected"
                       }`}
@@ -262,6 +298,12 @@ export function MobileHeader({
                     type="checkbox"
                     checked={showNext7Days}
                     onChange={(e) => onShowNext7DaysChange(e.target.checked)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        onShowNext7DaysChange(!showNext7Days);
+                      }
+                    }}
                     aria-label="Show only items expiring in the next 7 days"
                     className="w-4 h-4 text-[#00522C] focus:ring-2 focus:ring-[#00522C]"
                   />

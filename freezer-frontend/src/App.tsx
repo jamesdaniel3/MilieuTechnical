@@ -199,7 +199,7 @@ function App() {
 
       <main
         id="main-content"
-        className="w-[90vw] mx-auto p-4 pb-8 md:h-[calc(100vh-80px)]"
+        className="w-[90vw] mx-auto p-4 pb-8 md:h-[calc(100vh-80px)] md:overflow-hidden md:pb-4"
       >
         <div className="flex flex-col md:flex-row gap-6 h-full">
           {hasDrawers && (
@@ -225,7 +225,7 @@ function App() {
                     <div className="p-4 md:overflow-y-auto md:h-[calc(100%-64px)]">
                       {itemsByLocation[Location.TopDrawer].length > 0 ? (
                         <div
-                          className="flex flex-wrap gap-4"
+                          className="flex flex-col md:flex-row md:flex-wrap gap-4"
                           role="list"
                           aria-label={`Items in ${Location.TopDrawer}`}
                         >
@@ -287,7 +287,7 @@ function App() {
                     <div className="p-4 md:overflow-y-auto md:h-[calc(100%-64px)]">
                       {itemsByLocation[Location.BottomDrawer].length > 0 ? (
                         <div
-                          className="flex flex-wrap gap-4"
+                          className="flex flex-col md:flex-row md:flex-wrap gap-4"
                           role="list"
                           aria-label={`Items in ${Location.BottomDrawer}`}
                         >
@@ -354,7 +354,7 @@ function App() {
                       className={`${
                         hasDrawers
                           ? "flex flex-col gap-3"
-                          : "flex flex-wrap gap-4"
+                          : "flex flex-col md:flex-row md:flex-wrap gap-4"
                       }`}
                       role="list"
                       aria-label={`Items in ${Location.Door}`}
