@@ -351,7 +351,11 @@ function App() {
                 <div className="p-4 md:overflow-y-auto md:h-[calc(100%-64px)]">
                   {itemsByLocation[Location.Door].length > 0 ? (
                     <div
-                      className="flex flex-col gap-3"
+                      className={`${
+                        hasDrawers
+                          ? "flex flex-col gap-3"
+                          : "flex flex-wrap gap-4"
+                      }`}
                       role="list"
                       aria-label={`Items in ${Location.Door}`}
                     >
@@ -359,7 +363,7 @@ function App() {
                         <div key={item.id} role="listitem">
                           <ItemCard
                             item={item}
-                            fullWidth={true}
+                            fullWidth={hasDrawers}
                             onEdit={() => handleEdit(item.id)}
                             onDelete={async () => {
                               try {
