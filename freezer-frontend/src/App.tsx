@@ -156,10 +156,16 @@ function App() {
       toast.error("Failed to save item. Changes have been rolled back.");
     }
   };
+
   return (
     <div className="h-screen bg-[#fbfcee] md:overflow-hidden overflow-y-auto">
+      {/* Skip link for keyboard users */}
+      <a href="#main-content" className="skip-link">
+        Skip to main content
+      </a>
+
       {/* Mobile Header */}
-      <div className="md:hidden">
+      <header className="md:hidden">
         <MobileHeader
           search={search}
           onSearch={setSearch}
@@ -171,10 +177,10 @@ function App() {
           onShowNext7DaysChange={setShowNext7Days}
           onAdd={() => setIsModalOpen(true)}
         />
-      </div>
+      </header>
 
       {/* Desktop Header */}
-      <div className="hidden md:block">
+      <header className="hidden md:block">
         <Header
           search={search}
           onSearch={setSearch}
@@ -186,9 +192,12 @@ function App() {
           onShowNext7DaysChange={setShowNext7Days}
           onAdd={() => setIsModalOpen(true)}
         />
-      </div>
+      </header>
 
-      <div className="w-[90vw] mx-auto p-4 pb-8 md:h-[calc(100vh-80px)]">
+      <main
+        id="main-content"
+        className="w-[90vw] mx-auto p-4 pb-8 md:h-[calc(100vh-80px)]"
+      >
         <div className="flex flex-col md:flex-row gap-6 h-full">
           {hasDrawers && (
             <div className={isDoorVisible ? "w-full md:w-[70%]" : "w-full"}>
@@ -200,68 +209,26 @@ function App() {
                         ? "md:h-full"
                         : "md:h-[calc(50%-12px)]"
                     }`}
+                    aria-labelledby="top-drawer-heading"
                   >
                     <div className="p-4 border-b border-[#00522C]/20">
-                      <h2 className="text-lg font-semibold text-[#00522C]">
+                      <h2
+                        id="top-drawer-heading"
+                        className="text-lg font-semibold text-[#00522C]"
+                      >
                         {Location.TopDrawer}
                       </h2>
                     </div>
                     <div className="p-4 md:overflow-y-auto md:h-[calc(100%-64px)]">
                       {itemsByLocation[Location.TopDrawer].length > 0 ? (
-                        <div className="flex flex-wrap gap-4">
+                        <div
+                          className="flex flex-wrap gap-4"
+                          role="list"
+                          aria-label={`Items in ${Location.TopDrawer}`}
+                        >
                           {itemsByLocation[Location.TopDrawer].map((item) => (
-                            <ItemCard
-                              key={item.id}
-                              item={item}
-                              onEdit={() => handleEdit(item.id)}
-                              onDelete={async () => {
-                                try {
-                                  await deleteItem(item.id);
-                                  if (editingId === item.id) setEditingId(null);
-                                } catch (error) {
-                                  console.error(
-                                    "Failed to delete item:",
-                                    error
-                                  );
-                                  toast.error(
-                                    "Failed to delete item. Please try again."
-                                  );
-                                }
-                              }}
-                            />
-                          ))}
-                        </div>
-                      ) : (
-                        <div className="flex items-center justify-center h-full">
-                          <p className="text-[#00522C]/60 text-center">
-                            No items in {Location.TopDrawer}
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                  </section>
-                )}
-
-                {isBottomDrawerVisible && (
-                  <section
-                    className={`bg-white rounded-lg shadow-sm border border-[#00522C]/20 ${
-                      visibleDrawers === 1
-                        ? "md:h-full"
-                        : "md:h-[calc(50%-12px)]"
-                    }`}
-                  >
-                    <div className="p-4 border-b border-[#00522C]/20">
-                      <h2 className="text-lg font-semibold text-[#00522C]">
-                        {Location.BottomDrawer}
-                      </h2>
-                    </div>
-                    <div className="p-4 md:overflow-y-auto md:h-[calc(100%-64px)]">
-                      {itemsByLocation[Location.BottomDrawer].length > 0 ? (
-                        <div className="flex flex-wrap gap-4">
-                          {itemsByLocation[Location.BottomDrawer].map(
-                            (item) => (
+                            <div key={item.id} role="listitem">
                               <ItemCard
-                                key={item.id}
                                 item={item}
                                 onEdit={() => handleEdit(item.id)}
                                 onDelete={async () => {
@@ -280,12 +247,79 @@ function App() {
                                   }
                                 }}
                               />
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="flex items-center justify-center h-full">
+                          <p
+                            className="text-[#00522C]/60 text-center"
+                            aria-live="polite"
+                          >
+                            No items in {Location.TopDrawer}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </section>
+                )}
+
+                {isBottomDrawerVisible && (
+                  <section
+                    className={`bg-white rounded-lg shadow-sm border border-[#00522C]/20 ${
+                      visibleDrawers === 1
+                        ? "md:h-full"
+                        : "md:h-[calc(50%-12px)]"
+                    }`}
+                    aria-labelledby="bottom-drawer-heading"
+                  >
+                    <div className="p-4 border-b border-[#00522C]/20">
+                      <h2
+                        id="bottom-drawer-heading"
+                        className="text-lg font-semibold text-[#00522C]"
+                      >
+                        {Location.BottomDrawer}
+                      </h2>
+                    </div>
+                    <div className="p-4 md:overflow-y-auto md:h-[calc(100%-64px)]">
+                      {itemsByLocation[Location.BottomDrawer].length > 0 ? (
+                        <div
+                          className="flex flex-wrap gap-4"
+                          role="list"
+                          aria-label={`Items in ${Location.BottomDrawer}`}
+                        >
+                          {itemsByLocation[Location.BottomDrawer].map(
+                            (item) => (
+                              <div key={item.id} role="listitem">
+                                <ItemCard
+                                  item={item}
+                                  onEdit={() => handleEdit(item.id)}
+                                  onDelete={async () => {
+                                    try {
+                                      await deleteItem(item.id);
+                                      if (editingId === item.id)
+                                        setEditingId(null);
+                                    } catch (error) {
+                                      console.error(
+                                        "Failed to delete item:",
+                                        error
+                                      );
+                                      toast.error(
+                                        "Failed to delete item. Please try again."
+                                      );
+                                    }
+                                  }}
+                                />
+                              </div>
                             )
                           )}
                         </div>
                       ) : (
                         <div className="flex items-center justify-center h-full">
-                          <p className="text-[#00522C]/60 text-center">
+                          <p
+                            className="text-[#00522C]/60 text-center"
+                            aria-live="polite"
+                          >
                             No items in {Location.BottomDrawer}
                           </p>
                         </div>
@@ -299,38 +333,52 @@ function App() {
 
           {isDoorVisible && (
             <div className={hasDrawers ? "w-full md:w-[30%]" : "w-full"}>
-              <section className="bg-white rounded-lg shadow-sm border border-[#00522C]/20 md:h-full">
+              <section
+                className="bg-white rounded-lg shadow-sm border border-[#00522C]/20 md:h-full"
+                aria-labelledby="door-heading"
+              >
                 <div className="p-4 border-b border-[#00522C]/20">
-                  <h2 className="text-lg font-semibold text-[#00522C]">
+                  <h2
+                    id="door-heading"
+                    className="text-lg font-semibold text-[#00522C]"
+                  >
                     {Location.Door}
                   </h2>
                 </div>
                 <div className="p-4 md:overflow-y-auto md:h-[calc(100%-64px)]">
                   {itemsByLocation[Location.Door].length > 0 ? (
-                    <div className="flex flex-col gap-3">
+                    <div
+                      className="flex flex-col gap-3"
+                      role="list"
+                      aria-label={`Items in ${Location.Door}`}
+                    >
                       {itemsByLocation[Location.Door].map((item) => (
-                        <ItemCard
-                          key={item.id}
-                          item={item}
-                          fullWidth={true}
-                          onEdit={() => handleEdit(item.id)}
-                          onDelete={async () => {
-                            try {
-                              await deleteItem(item.id);
-                              if (editingId === item.id) setEditingId(null);
-                            } catch (error) {
-                              console.error("Failed to delete item:", error);
-                              toast.error(
-                                "Failed to delete item. Please try again."
-                              );
-                            }
-                          }}
-                        />
+                        <div key={item.id} role="listitem">
+                          <ItemCard
+                            item={item}
+                            fullWidth={true}
+                            onEdit={() => handleEdit(item.id)}
+                            onDelete={async () => {
+                              try {
+                                await deleteItem(item.id);
+                                if (editingId === item.id) setEditingId(null);
+                              } catch (error) {
+                                console.error("Failed to delete item:", error);
+                                toast.error(
+                                  "Failed to delete item. Please try again."
+                                );
+                              }
+                            }}
+                          />
+                        </div>
                       ))}
                     </div>
                   ) : (
                     <div className="flex items-center justify-center h-full">
-                      <p className="text-[#00522C]/60 text-center">
+                      <p
+                        className="text-[#00522C]/60 text-center"
+                        aria-live="polite"
+                      >
                         No items in {Location.Door}
                       </p>
                     </div>
@@ -352,7 +400,7 @@ function App() {
             onCancel={handleModalClose}
           />
         </Modal>
-      </div>
+      </main>
 
       <ToastContainer
         position="top-right"
@@ -364,6 +412,7 @@ function App() {
         pauseOnFocusLoss
         pauseOnHover
         theme="light"
+        aria-label="Notifications"
       />
     </div>
   );

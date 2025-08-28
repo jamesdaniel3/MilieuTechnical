@@ -92,8 +92,23 @@ export function ItemForm({
     onSave(item);
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
+      e.preventDefault();
+      handleSubmit();
+    }
+  };
+
   return (
-    <div className="space-y-4">
+    <form
+      className="space-y-4"
+      onSubmit={(e) => {
+        e.preventDefault();
+        handleSubmit();
+      }}
+      onKeyDown={handleKeyDown}
+      aria-label={`${isEdit ? "Edit" : "Add"} freezer item form`}
+    >
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <label className="flex flex-col gap-1">
           <span className="text-sm font-medium text-[#00522C]">Name</span>
@@ -102,13 +117,25 @@ export function ItemForm({
             onChange={(e) => setName(e.target.value)}
             placeholder="e.g., Chicken"
             maxLength={25}
-            className={errors.name ? "border-red-500" : ""}
+            className={`px-3 py-2 border border-[#00522C]/20 rounded focus:outline-none focus:border-[#00522C] focus:ring-1 focus:ring-[#00522C] ${
+              errors.name ? "border-red-500" : ""
+            }`}
+            aria-label="Item name"
+            aria-describedby={errors.name ? "name-error" : "name-help"}
+            aria-invalid={!!errors.name}
+            required
           />
           <div className="flex justify-between items-center">
             {errors.name && (
-              <span className="text-xs text-red-500">{errors.name}</span>
+              <span
+                id="name-error"
+                className="text-xs text-red-500"
+                role="alert"
+              >
+                {errors.name}
+              </span>
             )}
-            <span className="text-xs text-[#00522C]/60 ml-auto">
+            <span id="name-help" className="text-xs text-[#00522C]/60 ml-auto">
               {name.length}/25
             </span>
           </div>
@@ -121,10 +148,22 @@ export function ItemForm({
             value={quantity}
             min={1}
             onChange={(e) => setQuantity(Number(e.target.value) || 1)}
-            className={errors.quantity ? "border-red-500" : ""}
+            className={`px-3 py-2 border border-[#00522C]/20 rounded focus:outline-none focus:border-[#00522C] focus:ring-1 focus:ring-[#00522C] ${
+              errors.quantity ? "border-red-500" : ""
+            }`}
+            aria-label="Item quantity"
+            aria-describedby={errors.quantity ? "quantity-error" : undefined}
+            aria-invalid={!!errors.quantity}
+            required
           />
           {errors.quantity && (
-            <span className="text-xs text-red-500">{errors.quantity}</span>
+            <span
+              id="quantity-error"
+              className="text-xs text-red-500"
+              role="alert"
+            >
+              {errors.quantity}
+            </span>
           )}
         </label>
 
@@ -134,10 +173,22 @@ export function ItemForm({
             value={units}
             onChange={(e) => setUnits(e.target.value)}
             placeholder="e.g., cups"
-            className={errors.units ? "border-red-500" : ""}
+            className={`px-3 py-2 border border-[#00522C]/20 rounded focus:outline-none focus:border-[#00522C] focus:ring-1 focus:ring-[#00522C] ${
+              errors.units ? "border-red-500" : ""
+            }`}
+            aria-label="Item units"
+            aria-describedby={errors.units ? "units-error" : undefined}
+            aria-invalid={!!errors.units}
+            required
           />
           {errors.units && (
-            <span className="text-xs text-red-500">{errors.units}</span>
+            <span
+              id="units-error"
+              className="text-xs text-red-500"
+              role="alert"
+            >
+              {errors.units}
+            </span>
           )}
         </label>
 
@@ -146,6 +197,8 @@ export function ItemForm({
           <select
             value={location}
             onChange={(e) => setLocation(e.target.value as Location)}
+            className="px-3 py-2 border border-[#00522C]/20 rounded focus:outline-none focus:border-[#00522C] focus:ring-1 focus:ring-[#00522C]"
+            aria-label="Storage location"
           >
             <option value={Location.TopDrawer}>{Location.TopDrawer}</option>
             <option value={Location.BottomDrawer}>
@@ -161,10 +214,24 @@ export function ItemForm({
             value={expiresOn}
             onChange={(e) => setExpiresOn(e.target.value)}
             placeholder="MM/DD/YYYY"
-            className={errors.expiresOn ? "border-red-500" : ""}
+            className={`px-3 py-2 border border-[#00522C]/20 rounded focus:outline-none focus:border-[#00522C] focus:ring-1 focus:ring-[#00522C] ${
+              errors.expiresOn ? "border-red-500" : ""
+            }`}
+            aria-label="Expiration date"
+            aria-describedby={
+              errors.expiresOn ? "expires-error" : "expires-help"
+            }
+            aria-invalid={!!errors.expiresOn}
+            required
           />
           {errors.expiresOn && (
-            <span className="text-xs text-red-500">{errors.expiresOn}</span>
+            <span
+              id="expires-error"
+              className="text-xs text-red-500"
+              role="alert"
+            >
+              {errors.expiresOn}
+            </span>
           )}
         </label>
       </div>
@@ -177,35 +244,48 @@ export function ItemForm({
           placeholder="Optional notes..."
           maxLength={75}
           rows={3}
+          className="px-3 py-2 border border-[#00522C]/20 rounded focus:outline-none focus:border-[#00522C] focus:ring-1 focus:ring-[#00522C]"
+          aria-label="Optional notes about the item"
+          aria-describedby="notes-help"
         />
         <div className="flex justify-end">
-          <span className="text-xs text-[#00522C]/60">{notes.length}/75</span>
+          <span id="notes-help" className="text-xs text-[#00522C]/60">
+            {notes.length}/75
+          </span>
         </div>
       </label>
 
-      <div className="flex justify-between pt-4">
+      <div
+        className="flex justify-between pt-4"
+        role="group"
+        aria-label="Form actions"
+      >
         {onCancel && (
           <button
             type="button"
             onClick={onCancel}
-            className="px-4 py-2 border border-[#00522C] text-[#00522C] bg-white hover:bg-[#00522C]/5"
+            className="px-4 py-2 border border-[#00522C] text-[#00522C] bg-white hover:bg-[#00522C]/5 focus:outline-none focus:ring-2 focus:ring-[#00522C] focus:ring-offset-2"
+            aria-label="Cancel and close form"
           >
             Cancel
           </button>
         )}
         <button
-          type="button"
-          onClick={handleSubmit}
-          className={`px-4 py-2 ${
+          type="submit"
+          disabled={!isValid}
+          className={`px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#00522C] focus:ring-offset-2 ${
             isValid
-              ? "bg-[#00522C] text-white"
-              : "bg-white text-[#00522C] border border-[#00522C]"
+              ? "bg-[#00522C] text-white hover:bg-[#00522C]/80"
+              : "bg-white text-[#00522C] border border-[#00522C] opacity-50 cursor-not-allowed"
+          }`}
+          aria-label={`${isEdit ? "Save" : "Add"} item${
+            !isValid ? " (form has errors)" : ""
           }`}
         >
           {isEdit ? "Save" : "Add"}
         </button>
       </div>
-    </div>
+    </form>
   );
 }
 

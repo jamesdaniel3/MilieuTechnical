@@ -47,38 +47,61 @@ export function Modal({
 
     document.addEventListener("keydown", handleKey, true);
 
+    // Focus the first focusable element when modal opens
     const toFocus = dialogRef.current?.querySelector<HTMLElement>(
       'input, button, textarea, select, [tabindex]:not([tabindex="-1"])'
     );
     toFocus?.focus();
 
+    // Prevent body scroll when modal is open
+    document.body.style.overflow = "hidden";
+
     return () => {
       document.removeEventListener("keydown", handleKey, true);
+      document.body.style.overflow = "unset";
     };
   }, [open, onClose]);
 
   if (!open) return null;
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center"
       aria-modal="true"
       role="dialog"
+      aria-labelledby={title ? "modal-title" : undefined}
+      aria-describedby="modal-content"
     >
-      <div className="absolute inset-0 bg-black/40" onClick={onClose} />
+      <div
+        className="absolute inset-0 bg-black/40"
+        onClick={onClose}
+        aria-hidden="true"
+      />
       <div
         ref={dialogRef}
         className="relative bg-white rounded shadow-xl w-full max-w-lg mx-4 p-4 border border-[#00522C]/20"
+        role="document"
+        id="modal-content"
       >
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-lg font-medium text-[#00522C]">{title}</h3>
-          <button onClick={onClose} aria-label="Close" ref={firstFocusableRef}>
+          {title && (
+            <h3 id="modal-title" className="text-lg font-medium text-[#00522C]">
+              {title}
+            </h3>
+          )}
+          <button
+            onClick={onClose}
+            aria-label="Close modal"
+            ref={firstFocusableRef}
+            className="px-3 py-1 text-[#00522C] hover:bg-[#00522C]/5 rounded focus:outline-none focus:ring-2 focus:ring-[#00522C] focus:ring-offset-2"
+          >
             Close
           </button>
         </div>
         {children}
         <button
           className="sr-only"
-          aria-hidden
+          aria-hidden="true"
           ref={lastFocusableRef}
           onClick={() => {}}
         />

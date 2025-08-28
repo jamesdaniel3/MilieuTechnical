@@ -23,30 +23,57 @@ export function ItemCard({
   const getStatusBadge = () => {
     if (isExpired) {
       return (
-        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+        <span
+          className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800"
+          aria-label="Status: Expired"
+        >
           Expired
         </span>
       );
     } else if (isExpiringSoon) {
       return (
-        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+        <span
+          className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800"
+          aria-label="Status: Expiring Soon"
+        >
           Expiring Soon
         </span>
       );
     } else {
       return (
-        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+        <span
+          className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800"
+          aria-label="Status: Fresh"
+        >
           Fresh
         </span>
       );
     }
   };
 
+  // Format expiration date for screen readers
+  const formatExpirationDate = (date: Date) => {
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
+
+  const expirationText = formatExpirationDate(expiresDate);
+  const statusText = isExpired
+    ? "expired"
+    : isExpiringSoon
+    ? "expiring soon"
+    : "fresh";
+
   return (
     <div
       className={`bg-white rounded-lg border border-[#00522C]/20 p-3 shadow-sm hover:border-[#00522C] hover:border-2 ${
         fullWidth ? "w-full" : "w-full md:w-64"
       } ${!fullWidth ? "h-40 flex flex-col" : ""}`}
+      role="article"
+      aria-label={`${item.name}, ${item.quantity} ${item.units}, ${statusText}, expires ${expirationText}`}
     >
       <div className="flex justify-between items-start mb-2">
         <h3 className="font-medium text-[#00522C] truncate flex-1 mr-2">
@@ -56,7 +83,9 @@ export function ItemCard({
       </div>
 
       <div className="text-sm text-[#00522C]/70 mb-2">
-        {item.quantity} {item.units}
+        <span aria-label={`Quantity: ${item.quantity} ${item.units}`}>
+          {item.quantity} {item.units}
+        </span>
       </div>
 
       {item.notes && (
@@ -69,6 +98,7 @@ export function ItemCard({
               WebkitBoxOrient: "vertical",
               overflow: "hidden",
             }}
+            aria-label={`Notes: ${item.notes}`}
           >
             {item.notes}
           </div>
@@ -77,32 +107,42 @@ export function ItemCard({
 
       {!item.notes && !fullWidth && <div className="flex-1"></div>}
 
-      <div className="flex gap-2 mt-auto">
+      <div
+        className="flex gap-2 mt-auto"
+        role="group"
+        aria-label={`Actions for ${item.name}`}
+      >
         <button
           onClick={onEdit}
-          className="flex-1 bg-[#00522C] hover:bg-[#00522C]/80 text-white p-2 rounded-md transition-colors duration-200 flex items-center justify-center"
+          aria-label={`Edit ${item.name}`}
+          className="flex-1 bg-[#00522C] hover:bg-[#00522C]/80 text-white p-2 rounded-md transition-colors duration-200 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-[#00522C] focus:ring-offset-2"
         >
           <img
             src={editIcon}
-            alt="Edit"
+            alt=""
             className="w-4 h-4"
+            aria-hidden="true"
             style={{
               filter: "brightness(0) invert(1)", // Makes the black icon white
             }}
           />
+          <span className="sr-only">Edit</span>
         </button>
         <button
           onClick={onDelete}
-          className="flex-1 bg-[#00522C] hover:bg-[#00522C]/80 text-white p-2 rounded-md transition-colors duration-200 flex items-center justify-center"
+          aria-label={`Delete ${item.name}`}
+          className="flex-1 bg-[#00522C] hover:bg-[#00522C]/80 text-white p-2 rounded-md transition-colors duration-200 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-[#00522C] focus:ring-offset-2"
         >
           <img
             src={trashIcon}
-            alt="Delete"
+            alt=""
             className="w-4 h-4"
+            aria-hidden="true"
             style={{
               filter: "brightness(0) invert(1)", // Makes the black icon white
             }}
           />
+          <span className="sr-only">Delete</span>
         </button>
       </div>
     </div>

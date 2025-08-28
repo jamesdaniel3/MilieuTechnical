@@ -13,6 +13,42 @@ body {
   color: var(--primary-green);
 }
 
+/* Accessibility utilities */
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* Focus management */
+*:focus {
+  outline: 2px solid var(--primary-green) !important;
+  outline-offset: 2px !important;
+}
+
+/* Skip link for keyboard users */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: var(--primary-green);
+  color: white;
+  padding: 8px;
+  text-decoration: none;
+  border-radius: 4px;
+  z-index: 1000;
+}
+
+.skip-link:focus {
+  top: 6px;
+}
+
 /* Custom button styles */
 button {
   background-color: var(--primary-green) !important;
@@ -67,4 +103,35 @@ textarea:focus {
 .Toastify__toast--success {
   background-color: #10b981 !important;
   color: white !important;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --primary-green: #000000;
+    --background-cream: #ffffff;
+  }
+
+  .border-\[#00522C\]\/20 {
+    border-color: #000000 !important;
+  }
+
+  .text-\[#00522C\]\/60 {
+    color: #000000 !important;
+  }
+
+  .text-\[#00522C\]\/70 {
+    color: #000000 !important;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
