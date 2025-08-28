@@ -4,6 +4,7 @@ import { Location } from "./types";
 import ItemForm from "./components/ItemForm";
 import Modal from "./components/Modal";
 import Header from "./components/Header";
+import MobileHeader from "./components/MobileHeader";
 import type { FreshnessFilter } from "./components/Header";
 import ItemCard from "./components/ItemCard";
 import { ToastContainer, toast } from "react-toastify";
@@ -47,7 +48,7 @@ function App() {
     const now = new Date();
     const expiresDate = new Date(expiresOn);
     const sevenDaysFromNow = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
-    return expiresDate <= sevenDaysFromNow;
+    return expiresDate >= now && expiresDate <= sevenDaysFromNow;
   };
 
   const filtered = useMemo(() => {
@@ -157,17 +158,35 @@ function App() {
   };
   return (
     <div className="h-screen bg-[#fbfcee] md:overflow-hidden overflow-y-auto">
-      <Header
-        search={search}
-        onSearch={setSearch}
-        sections={sections}
-        onSectionsChange={setSections}
-        freshnessFilter={freshnessFilter}
-        onFreshnessFilterChange={setFreshnessFilter}
-        showNext7Days={showNext7Days}
-        onShowNext7DaysChange={setShowNext7Days}
-        onAdd={() => setIsModalOpen(true)}
-      />
+      {/* Mobile Header */}
+      <div className="md:hidden">
+        <MobileHeader
+          search={search}
+          onSearch={setSearch}
+          sections={sections}
+          onSectionsChange={setSections}
+          freshnessFilter={freshnessFilter}
+          onFreshnessFilterChange={setFreshnessFilter}
+          showNext7Days={showNext7Days}
+          onShowNext7DaysChange={setShowNext7Days}
+          onAdd={() => setIsModalOpen(true)}
+        />
+      </div>
+
+      {/* Desktop Header */}
+      <div className="hidden md:block">
+        <Header
+          search={search}
+          onSearch={setSearch}
+          sections={sections}
+          onSectionsChange={setSections}
+          freshnessFilter={freshnessFilter}
+          onFreshnessFilterChange={setFreshnessFilter}
+          showNext7Days={showNext7Days}
+          onShowNext7DaysChange={setShowNext7Days}
+          onAdd={() => setIsModalOpen(true)}
+        />
+      </div>
 
       <div className="w-[90vw] mx-auto p-4 pb-8 md:h-[calc(100vh-80px)]">
         <div className="flex flex-col md:flex-row gap-6 h-full">

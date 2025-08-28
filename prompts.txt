@@ -69,3 +69,7 @@ On write requests (creating new items and editing old items), introduce a 10% fa
 You can just generate a number from 1-10 and if it is 10, throw an error. 
 We want to use optimistic updates and rollback changes on fails, so implement this on the front end. 
 Be sure that the simulated failure is only used in development environments.
+
+
+can you create a mobile header component that will replace the main header at the previously defined breakpoint. 
+It should use a + for the add button, then have a search bar, then have a hamburger menu that drops down for all possible filters, and no select all button within the filters
