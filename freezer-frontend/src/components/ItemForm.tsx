@@ -59,9 +59,15 @@ export function ItemForm({
     if (!expiresOn.trim()) {
       newErrors.expiresOn = "Expiration date is required";
     } else {
-      const date = new Date(expiresOn);
-      if (isNaN(date.getTime())) {
-        newErrors.expiresOn = "Please enter a valid date (MM/DD/YYYY)";
+      // Check for complete MM/DD/YYYY format (allows single or double digits for month and day)
+      const dateRegex = /^(0?[1-9]|1[0-2])\/(0?[1-9]|[12]\d|3[01])\/\d{4}$/;
+      if (!dateRegex.test(expiresOn)) {
+        newErrors.expiresOn = "Please enter a complete date (MM/DD/YYYY)";
+      } else {
+        const date = new Date(expiresOn);
+        if (isNaN(date.getTime())) {
+          newErrors.expiresOn = "Please enter a valid date (MM/DD/YYYY)";
+        }
       }
     }
 
@@ -217,6 +223,7 @@ export function ItemForm({
             </option>
             <option value={Location.Door}>{Location.Door}</option>
           </select>
+          <div className="h-5"></div>
         </label>
 
         <label className="flex flex-col gap-1 md:col-span-2">
