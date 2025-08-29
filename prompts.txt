@@ -13,23 +13,28 @@ Ensure an in-memory cache is maintained to avoid extra reads. Run your code agai
 
 Agent Response: 
 
-generated a large part of the codebase
+Generated baseline logic, along with a UX with broken Tailwind code. 
 
-Next Prompt:
+Modal Creation Prompt:
 I want the logic for adding items to be handled through a modal. 
 Can you break out the item form into it's own component? 
 Additionally, I want to add items to the displayed items performantly.
 
 Agent response:
 
-created modal 
+Created Modal Section, but had it displaying inline on the page instead of putting it in the middle and supporting things like clicing out. 
 
+Header Creation Prompt:
 
 I want you to create a header at the top of the page using header.tsx. 
 It should be sticky and have a border on only the bottom. On the far left, it should contain a search feature that allows for searching for items by name and has a 300 ms debounce. 
 It should also have a dropdown with check boxes that allows users to define which of the three sections they want to see info from
 
+Agent response:
 
+Got the header logic pretty well. At this point the styling was in and the site was very dark. I did not like the order of the tools on the header or the spacing very much, but the elemtents requested were there. 
+
+Page Structure Prompt:
 
 I want the page to essentially have 4 sections. The header, and then a section for the top drawer, the bottom drawer, and the door. 
 The top and bottom drawer should containers take up about 70% of the container width and be stacked vertically. 
@@ -39,37 +44,67 @@ If there are no items in a section just leave a message saying there are no item
 If there are too many items to fit in a section, let users scroll within the section, but do not have the page move. 
 Additionally, remove the table in each of these sections, create a new component called ItemCard, and use cards to display each item in the freezer
 
+Agent Response:
+
+Sectioned the page well. Struggled a lot with getting the relative sizing of the sections correct. Cards were super ugly and needed to be restyled.
+
+Modal Update Prompt: 
 
 I want to make some changes to the modal. 
 First, I want the add button in the bottom right corner and the cancel button in the bottom left corner, second, I want to get rid of the datepicker and just have users input text. 
-I want their to add a units field in addtion to a quntity field. It should be a text field with example text labled cups. 
+I want to add a units field in addtion to a quantity field. It should be a text field with example text labled cups. 
 Finally, I want to implement toasts. If the user tries to submit with any invalid data, a toast will pop up telling them what they need to fix. 
 Additionally, the add button should have two states. 
 If the current data submitted is incomplete, it should be white with a green outline and green text. IF the data is valid, it should be green with white text
 
+Agent Response:
+
+Mostly fixed the modal, could not figure out the two version save button but I ended up finding a different design that I liked better. Generated a self-built toast that I elected to replace with react-toastify. 
+
+Card Update Prompt:
 
 I want to rewrite the itemCard component. I want it to be much more compact. 
-It should feature text showing the name of the item in the top left and a badge in the rop right showing whether it is freshm epxiring soon, or expired. 
+It should feature text showing the name of the item in the top left and a badge in the top right showing whether it is fresh, epxiring soon, or expired. 
 Expiring soon means that it expires within 3 days of the current time. On the next line there should be subtext showing the quantity and unit. 
 On the last line, we should use the edit icon and the trash icon to create buttons for edit and delete. 
 These icons are black and I want them to be white on a green background, so be sure to invert the pngs. 
 Since mulitple of these will fit on each line in the box, make sure their containers allow for multiple to be added before a break and maintain vertical scrolling
 
+Agent Response:
 
-can you list the cards in each section in order by how soon they expire? 
+Did a really good job of generating the cards with some minor spacing issues that I went back to fix
+
+Sorting Prompt:
+
+Can you list the cards in each section in order by how soon they expire? 
 Expired foods can go first, then sort by expiration date - current date. 
 Make sure this order is maintained when items are added. 
-ADditionally, can you add another filter to the header that allows for filtering food by fresh, expiring soon, and expired? 
+Additionally, can you add another filter to the header that allows for filtering food by fresh, expiring soon, and expired? 
 Finally, can you add a radio button to the header that allows for user to look at only food expiring in the next 7 days
 
+Agent Response:
+
+Essnetially no issues, implemented this well. I had to go back and make sure expired foods were also sorted, but that was my error in specification. A radio button also turned out to be a poor choice that was reverted.
+
+Failure Simulator Prompt:
 
 Now, I want to simulate real world failure. 
 Create an environment variable for DEV/PRODUCTION and set it to DEV. 
-On write requests (creating new items and editing old items), introduce a 10% failure rate. 
+On write requests (creating new items, editing and deleting old items), introduce a 10% failure rate. 
 You can just generate a number from 1-10 and if it is 10, throw an error. 
 We want to use optimistic updates and rollback changes on fails, so implement this on the front end. 
 Be sure that the simulated failure is only used in development environments.
 
+Agent Response:
 
-can you create a mobile header component that will replace the main header at the previously defined breakpoint. 
+Generated this code perfectly, I ended up going back to add some customization but it executed the original Prompt
+
+
+Mobile Header Prompt:
+
+Can you create a mobile header component that will replace the main header at the previously defined breakpoint. 
 It should use a + for the add button, then have a search bar, then have a hamburger menu that drops down for all possible filters, and no select all button within the filters
+
+Agent Response:
+
+Generated this really well but had some minor issues with the hamburger menu
