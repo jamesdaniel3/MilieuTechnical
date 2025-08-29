@@ -16,7 +16,6 @@ describe("Search Debounce", () => {
   });
 
   it("debounces search input and only calls onSearch after delay", async () => {
-    // Test the debounce logic directly
     let timeoutRef: number | null = null;
 
     const debouncedSearch = (value: string) => {

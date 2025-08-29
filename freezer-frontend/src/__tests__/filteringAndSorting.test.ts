@@ -18,7 +18,6 @@ function makeItem(overrides: Partial<FreezerItem> = {}): FreezerItem {
   return { ...base, ...overrides };
 }
 
-// Helper function to determine item freshness (copied from App.tsx logic)
 const getItemFreshness = (expiresOn: string) => {
   const now = new Date();
   const expiresDate = new Date(expiresOn);
