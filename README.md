@@ -2,7 +2,7 @@
 
 ![Screenshot of home page](./home.png)
 
-A video demonstration of the project running can be found [here](./demo.mov).
+A video demonstration of the project running can be found [here](https://youtu.be/vVOG5-b6e34).
 
 If you want to test it out, you can clone it and run the following:
 
