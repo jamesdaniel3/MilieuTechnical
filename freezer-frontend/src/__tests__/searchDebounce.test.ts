@@ -1,8 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { renderHook, act } from "@testing-library/react";
-import { Header } from "../components/Header";
-import type { FreshnessFilter } from "../components/Header";
-import { Location } from "../types";
+import { act } from "react";
 
 // Mock the search callback
 const mockOnSearch = vi.fn();
@@ -21,7 +18,6 @@ describe("Search Debounce", () => {
   it("debounces search input and only calls onSearch after delay", async () => {
     // Test the debounce logic directly
     let timeoutRef: number | null = null;
-    let lastValue = "";
 
     const debouncedSearch = (value: string) => {
       if (timeoutRef !== null) window.clearTimeout(timeoutRef);

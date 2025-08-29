@@ -1,6 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
-import { renderHook, act } from "@testing-library/react";
-import { useFreezer } from "../useFreezer";
+import { describe, it, expect, beforeEach } from "vitest";
 import { freezerRepository } from "../repository";
 import type { FreezerItem } from "../types";
 import { Location } from "../types";
