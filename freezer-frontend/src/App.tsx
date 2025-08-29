@@ -29,7 +29,6 @@ function App() {
     [Location.Door]: true,
   });
 
-  // Helper function to determine item freshness
   const getItemFreshness = useCallback((expiresOn: string) => {
     const now = new Date();
     const expiresDate = new Date(expiresOn);
@@ -43,7 +42,6 @@ function App() {
     return "Fresh";
   }, []);
 
-  // Helper function to check if item expires in next 7 days
   const isExpiringInNext7Days = useCallback((expiresOn: string) => {
     const now = new Date();
     const expiresDate = new Date(expiresOn);
@@ -155,8 +153,6 @@ function App() {
       } catch (error) {
         console.error("Failed to save item:", error);
 
-        // Dismiss success toast and show error
-        toast.dismiss();
         toast.error("Failed to save item. Changes have been rolled back.");
       }
     },
@@ -185,7 +181,6 @@ function App() {
         Skip to main content
       </a>
 
-      {/* Mobile Header */}
       <header className="md:hidden sticky top-0 z-40">
         <MobileHeader
           search={search}
@@ -200,7 +195,6 @@ function App() {
         />
       </header>
 
-      {/* Desktop Header */}
       <header className="hidden md:block">
         <Header
           search={search}
