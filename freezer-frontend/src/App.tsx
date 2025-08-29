@@ -6,7 +6,7 @@ import Modal from "./components/Modal";
 import Header from "./components/Header";
 import MobileHeader from "./components/MobileHeader";
 import type { FreshnessFilter } from "./components/Header";
-import ItemCard from "./components/ItemCard";
+import { FreezerContent } from "./components/FreezerContent";
 import { ToastContainer, toast } from "react-toastify";
 
 function App() {
@@ -131,15 +131,6 @@ function App() {
     return result;
   }, [sortedItems]);
 
-  // Calculate which sections are visible
-  const isDoorVisible = sections[Location.Door];
-  const isTopDrawerVisible = sections[Location.TopDrawer];
-  const isBottomDrawerVisible = sections[Location.BottomDrawer];
-  const visibleDrawers = [isTopDrawerVisible, isBottomDrawerVisible].filter(
-    Boolean
-  ).length;
-  const hasDrawers = visibleDrawers > 0;
-
   const handleEdit = useCallback((itemId: string) => {
     setEditingId(itemId);
     setIsModalOpen(true);
@@ -187,13 +178,6 @@ function App() {
     [deleteItem, editingId]
   );
 
-  const createEditHandler = useCallback(
-    (itemId: string) => {
-      return () => handleEdit(itemId);
-    },
-    [handleEdit]
-  );
-
   return (
     <div className="min-h-screen bg-[#fbfcee] md:h-screen md:overflow-hidden">
       {/* Skip link for keyboard users */}
@@ -231,175 +215,20 @@ function App() {
         />
       </header>
 
-      <main
-        id="main-content"
-        className="w-[90vw] mx-auto p-4 pb-4 md:h-[calc(100vh-80px)] md:overflow-hidden"
-      >
-        <div className="flex flex-col md:flex-row gap-6 h-full">
-          {hasDrawers && (
-            <div className={isDoorVisible ? "w-full md:w-[70%]" : "w-full"}>
-              <div className="flex flex-col gap-6 md:h-full md:overflow-hidden">
-                {isTopDrawerVisible && (
-                  <section
-                    className={`bg-white rounded-lg shadow-sm border border-[#00522C]/20 ${
-                      visibleDrawers === 1
-                        ? "md:h-full"
-                        : "md:h-[calc(50%-12px)]"
-                    }`}
-                    aria-labelledby="top-drawer-heading"
-                  >
-                    <div className="p-4 border-b border-[#00522C]/20">
-                      <h2
-                        id="top-drawer-heading"
-                        className="text-lg font-semibold text-[#00522C]"
-                      >
-                        {Location.TopDrawer}
-                      </h2>
-                    </div>
-                    <div className="p-4 md:overflow-y-auto md:h-[calc(100%-64px)]">
-                      {itemsByLocation[Location.TopDrawer].length > 0 ? (
-                        <div
-                          className="flex flex-col md:flex-row md:flex-wrap gap-4"
-                          role="list"
-                          aria-label={`Items in ${Location.TopDrawer}`}
-                        >
-                          {itemsByLocation[Location.TopDrawer].map((item) => (
-                            <div key={item.id} role="listitem">
-                              <ItemCard
-                                item={item}
-                                onEdit={createEditHandler(item.id)}
-                                onDelete={createDeleteHandler(item.id)}
-                              />
-                            </div>
-                          ))}
-                        </div>
-                      ) : (
-                        <div className="flex items-center justify-center h-full">
-                          <p
-                            className="text-[#00522C]/60 text-center"
-                            aria-live="polite"
-                          >
-                            No items in {Location.TopDrawer}
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                  </section>
-                )}
+      <FreezerContent
+        itemsByLocation={itemsByLocation}
+        sections={sections}
+        onEdit={handleEdit}
+        onDelete={(itemId) => createDeleteHandler(itemId)()}
+      />
 
-                {isBottomDrawerVisible && (
-                  <section
-                    className={`bg-white rounded-lg shadow-sm border border-[#00522C]/20 ${
-                      visibleDrawers === 1
-                        ? "md:h-full"
-                        : "md:h-[calc(50%-12px)]"
-                    }`}
-                    aria-labelledby="bottom-drawer-heading"
-                  >
-                    <div className="p-4 border-b border-[#00522C]/20">
-                      <h2
-                        id="bottom-drawer-heading"
-                        className="text-lg font-semibold text-[#00522C]"
-                      >
-                        {Location.BottomDrawer}
-                      </h2>
-                    </div>
-                    <div className="p-4 md:overflow-y-auto md:h-[calc(100%-64px)]">
-                      {itemsByLocation[Location.BottomDrawer].length > 0 ? (
-                        <div
-                          className="flex flex-col md:flex-row md:flex-wrap gap-4"
-                          role="list"
-                          aria-label={`Items in ${Location.BottomDrawer}`}
-                        >
-                          {itemsByLocation[Location.BottomDrawer].map(
-                            (item) => (
-                              <div key={item.id} role="listitem">
-                                <ItemCard
-                                  item={item}
-                                  onEdit={createEditHandler(item.id)}
-                                  onDelete={createDeleteHandler(item.id)}
-                                />
-                              </div>
-                            )
-                          )}
-                        </div>
-                      ) : (
-                        <div className="flex items-center justify-center h-full">
-                          <p
-                            className="text-[#00522C]/60 text-center"
-                            aria-live="polite"
-                          >
-                            No items in {Location.BottomDrawer}
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                  </section>
-                )}
-              </div>
-            </div>
-          )}
-
-          {isDoorVisible && (
-            <div className={hasDrawers ? "w-full md:w-[30%]" : "w-full"}>
-              <section
-                className="bg-white rounded-lg shadow-sm border border-[#00522C]/20 md:h-full"
-                aria-labelledby="door-heading"
-              >
-                <div className="p-4 border-b border-[#00522C]/20">
-                  <h2
-                    id="door-heading"
-                    className="text-lg font-semibold text-[#00522C]"
-                  >
-                    {Location.Door}
-                  </h2>
-                </div>
-                <div className="p-4 md:overflow-y-auto md:h-[calc(100%-64px)]">
-                  {itemsByLocation[Location.Door].length > 0 ? (
-                    <div
-                      className={`${
-                        hasDrawers
-                          ? "flex flex-col gap-3"
-                          : "flex flex-col md:flex-row md:flex-wrap gap-4"
-                      }`}
-                      role="list"
-                      aria-label={`Items in ${Location.Door}`}
-                    >
-                      {itemsByLocation[Location.Door].map((item) => (
-                        <div key={item.id} role="listitem">
-                          <ItemCard
-                            item={item}
-                            fullWidth={hasDrawers}
-                            onEdit={createEditHandler(item.id)}
-                            onDelete={createDeleteHandler(item.id)}
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="flex items-center justify-center h-full">
-                      <p
-                        className="text-[#00522C]/60 text-center"
-                        aria-live="polite"
-                      >
-                        No items in {Location.Door}
-                      </p>
-                    </div>
-                  )}
-                </div>
-              </section>
-            </div>
-          )}
-        </div>
-
-        <Modal open={isModalOpen} onClose={handleModalClose}>
-          <ItemForm
-            initial={editingItem ?? {}}
-            onSave={handleSave}
-            onCancel={handleModalClose}
-          />
-        </Modal>
-      </main>
+      <Modal open={isModalOpen} onClose={handleModalClose}>
+        <ItemForm
+          initial={editingItem ?? {}}
+          onSave={handleSave}
+          onCancel={handleModalClose}
+        />
+      </Modal>
 
       <ToastContainer
         position="top-right"
